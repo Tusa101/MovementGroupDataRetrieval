@@ -25,9 +25,11 @@ public static class ServiceCollectionExtensions
             c.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Keycloak Tests API",
+                Title = "DataRetrieval API",
                 Version = "v1",
-                Description = "Keycloak Tests API. Created for testing purposes only. Try both explicit and implicit authorization flows"
+                Description = "DataRetrieval API." +
+                ".NET Web API that provides a data retrieval service while using caching, file storage, and a database. " +
+                "The service follows a layered architecture with design patterns and security mechanisms."
             });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -61,41 +63,6 @@ public static class ServiceCollectionExtensions
                         []
                     }
                 });
-
-            c.AddSecurityDefinition("Keycloak", new OpenApiSecurityScheme
-            {
-                Type = SecuritySchemeType.OAuth2,
-                Flows = new OpenApiOAuthFlows
-                {
-                    Implicit = new OpenApiOAuthFlow
-                    {
-                        AuthorizationUrl = new Uri(keycloakOptions.AuthorizationUrl),
-                        Scopes = new Dictionary<string, string>
-                        {
-                            { "openid", "openid" },
-                            { "profile", "profile" },
-                        }
-                    }
-                }
-            });
-
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Id = "Keycloak",
-                            Type = ReferenceType.SecurityScheme,
-                        },
-                        In = ParameterLocation.Header,
-                        Name = "Bearer",
-                        Scheme = "Bearer"
-                    },
-                    []
-                }
-            });
 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

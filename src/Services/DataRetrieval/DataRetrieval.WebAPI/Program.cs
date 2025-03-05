@@ -1,6 +1,14 @@
 
+using System;
+using System.Data;
+using DataRetrieval.WebAPI.Middleware;
+using Domain.Abstractions;
+using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
 using Infrastructure.Configuration.Options;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Presentation.Mapper;
 
 namespace DataRetrieval.WebAPI;
 
@@ -29,6 +37,12 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGenWithAuth();
 
+        var applicationAssembly = typeof(Application.AssemblyReference).Assembly;
+
+        builder.Services.AddAutoMapper(m => m.AddProfile<ApplicationMappingProfile>());
+
+        builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(applicationAssembly));
+
         // Add health checks
         builder.Services.AddHealthChecks();
 
@@ -41,6 +55,13 @@ public static class Program
 
         // Add custom data caching using Redis
         builder.Services.AddCustomDataCaching(redisOptions);
+
+        builder.Services.AddScoped<IUnitOfWork>(factory => 
+            factory.GetRequiredService<ApplicationDbContext>());
+        builder.Services.AddScoped<IDbConnection>(
+                factory => factory.GetRequiredService<ApplicationDbContext>().Database.GetDbConnection());
+
+        builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
 
         // Build the application
         var app = builder.Build();
@@ -56,8 +77,30 @@ public static class Program
             app.UseSwaggerUI();
         }
 
+        app.UseOutputCache();
+
+        app.UseExceptionHandler(handler => handler.Run(async context =>
+        {
+            var exceptionHandler = context.RequestServices.GetRequiredService<IExceptionHandler>();
+            var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+            if (exception != null)
+            {
+                await exceptionHandler.TryHandleAsync(context, exception, CancellationToken.None);
+            }
+        }));
+
+        var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+        lifetime.ApplicationStopping.Register(async() =>
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await db.Database.MigrateAsync();
+        });
+
         // Enable authorization
         app.UseAuthorization();
+
 
         // Map controllers
         app.MapControllers();

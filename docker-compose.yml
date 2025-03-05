@@ -71,3 +71,20 @@ services:
     restart: unless-stopped
     tty: true
     stdin_open: true
+
+  dataretrieval_db:
+    image: postgres
+    container_name: dataretrieval_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    expose:       
+      - "${POSTGRES_PORT}"
+    command: -p ${POSTGRES_PORT}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    networks:
+      - dataretrieval-network
+    volumes:
+      - dataretrieval_data:/var/lib/postgresql

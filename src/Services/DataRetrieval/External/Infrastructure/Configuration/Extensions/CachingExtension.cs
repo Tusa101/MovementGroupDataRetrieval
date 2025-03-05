@@ -1,5 +1,5 @@
-﻿using Infrastructure.Configuration.CachingPoliciesConfiguration;
-using Infrastructure.Configuration.CommonConstants;
+﻿using Domain.CommonConstants;
+using Infrastructure.Configuration.CachingPoliciesConfiguration;
 using Infrastructure.Configuration.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

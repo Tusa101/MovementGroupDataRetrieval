@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Configuration.CommonConstants;
+﻿namespace Domain.CommonConstants;
 /// <summary>
 /// This class contains constants for caching policies used in the application.
 /// </summary>
