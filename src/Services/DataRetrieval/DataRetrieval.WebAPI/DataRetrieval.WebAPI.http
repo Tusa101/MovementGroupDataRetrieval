@@ -1,0 +1,6 @@
+@DataRetrieval.WebAPI_HostAddress = http://localhost:5031
+
+GET {{DataRetrieval.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
