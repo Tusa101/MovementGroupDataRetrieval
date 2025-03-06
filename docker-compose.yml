@@ -6,6 +6,7 @@ networks:
 
 volumes:
   redisdata:
+  dataretrieval_data:
 
 services:
   #dataretrieval.api

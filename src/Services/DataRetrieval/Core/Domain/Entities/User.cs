@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Primitives;
 
 namespace Domain.Entities;
-public class UserProfile : BaseEntity
+public class User : BaseEntity
 {
     [Required]
     [MaxLength(100)]
@@ -14,6 +14,8 @@ public class UserProfile : BaseEntity
     
     [MaxLength(100)]
     public string? LastName { get; set; }
+
+    public string? PasswordHash { get; set; }
 
     [Required]
     [MaxLength(255)]

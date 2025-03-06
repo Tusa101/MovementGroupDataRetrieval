@@ -1,5 +1,5 @@
-﻿using Domain.CommonConstants;
-using Domain.Exceptions;
+﻿using Domain.Exceptions;
+using Shared.Constants;
 
 namespace Application.Exceptions;
 public sealed class ValidationException(Dictionary<string, string[]> errors)
