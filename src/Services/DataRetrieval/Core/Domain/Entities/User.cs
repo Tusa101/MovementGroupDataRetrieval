@@ -22,5 +22,26 @@ public class User : BaseEntity
     [EmailAddress]
     public string Email { get; set; }
 
+    public DateTimeOffset RegistrationDate { get; set; }
+
     public ICollection<News> NewsArticles { get; set; } = [];
+
+    public static User Create(
+        string nickName, 
+        string email, 
+        string? firstName, 
+        string? lastname, 
+        string passwordHash)
+    {
+        return new User
+        {
+            Id = Guid.NewGuid(),
+            NickName = nickName,
+            Email = email,
+            FirstName = firstName,
+            LastName = lastname,
+            PasswordHash = passwordHash,
+            RegistrationDate = DateTimeOffset.UtcNow,
+        };
+    }
 }

@@ -8,4 +8,4 @@ public sealed record RegisterUserCommand(
     string Password,
     string NickName,
     string? FirstName,
-    string? LastName) : ICommand<UserId>;
+    string? LastName) : ICommand<RegisterUserResponse>;

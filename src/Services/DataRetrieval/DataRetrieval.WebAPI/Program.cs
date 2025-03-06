@@ -4,9 +4,11 @@ using System.Data;
 using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
 using Domain.Abstractions;
+using Domain.Abstractions.RepositoryInterfaces;
 using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
 using Infrastructure.Configuration.Options;
+using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +59,8 @@ public static class Program
 
         // Add custom data caching using Redis
         builder.Services.AddCustomDataCaching(redisOptions);
+        
+        builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
 
         builder.Services.AddScoped<IUnitOfWork>(factory => 
             factory.GetRequiredService<ApplicationDbContext>());
@@ -65,7 +69,8 @@ public static class Program
 
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
         // Build the application
         var app = builder.Build();
