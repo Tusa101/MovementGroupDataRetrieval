@@ -15,7 +15,7 @@ public class User : BaseEntity
     [MaxLength(100)]
     public string? LastName { get; set; }
 
-    public string? PasswordHash { get; set; }
+    public string PasswordHash { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(255)]
@@ -24,18 +24,24 @@ public class User : BaseEntity
 
     public DateTimeOffset RegistrationDate { get; set; }
 
+    #region Navigation
+    
+    public ICollection<UserRole> UserRoles { get; set; } = [];
     public ICollection<News> NewsArticles { get; set; } = [];
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 
+    #endregion
+
+    #region Methods
     public static User Create(
-        string nickName, 
-        string email, 
-        string? firstName, 
-        string? lastname, 
-        string passwordHash)
+    string nickName,
+    string email,
+    string? firstName,
+    string? lastname,
+    string passwordHash)
     {
         return new User
         {
-            Id = Guid.NewGuid(),
             NickName = nickName,
             Email = email,
             FirstName = firstName,
@@ -43,5 +49,6 @@ public class User : BaseEntity
             PasswordHash = passwordHash,
             RegistrationDate = DateTimeOffset.UtcNow,
         };
-    }
+    } 
+    #endregion
 }

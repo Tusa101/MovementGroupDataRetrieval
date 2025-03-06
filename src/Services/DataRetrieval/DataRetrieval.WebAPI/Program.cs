@@ -1,6 +1,7 @@
 
 using System;
 using System.Data;
+using System.Text;
 using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
 using Domain.Abstractions;
@@ -9,9 +10,12 @@ using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
 using Infrastructure.Configuration.Options;
 using Infrastructure.Repositories;
+using Infrastructure.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Presentation.Mapper;
 
 namespace DataRetrieval.WebAPI;
@@ -27,7 +31,7 @@ public static class Program
     /// <param name="args">The command-line arguments.</param>
     public static void Main(string[] args)
     {
-        // Create a new WebApplication builder
+        // CreateToken a new WebApplication builder
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -45,7 +49,11 @@ public static class Program
 
         builder.Services.AddAutoMapper(m => m.AddProfile<ApplicationMappingProfile>());
 
-        builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(applicationAssembly));
+        builder.Services.AddMediatR(c =>
+        {
+            c.RegisterServicesFromAssembly(applicationAssembly);
+            c.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
+        });
 
         // Add health checks
         builder.Services.AddHealthChecks();
@@ -69,7 +77,13 @@ public static class Program
 
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddRepositories();
+
+        
+
+        builder.Services.AddAuth(builder.Configuration);
+
+        
 
 
         // Build the application
@@ -107,7 +121,8 @@ public static class Program
             await db.Database.MigrateAsync();
         });
 
-        // Enable authorization
+        app.UseAuthentication();
+
         app.UseAuthorization();
 
 

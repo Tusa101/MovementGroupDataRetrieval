@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Application.Abstractions.MediatR;
+﻿using Application.Abstractions.MediatR;
 using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -23,5 +22,7 @@ public class RegisterUserCommandHandler(IUserRepository userRepository) : IComma
             PasswordHasher.Hash(request.Password));
 
         await userRepository.Add(user);
+
+        return new(user.Id);
     }
 }
