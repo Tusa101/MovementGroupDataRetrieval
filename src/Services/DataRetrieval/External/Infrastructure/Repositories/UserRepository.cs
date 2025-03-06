@@ -17,6 +17,6 @@ public class UserRepository(ApplicationDbContext dbContext) : RepositoryBase<Use
                 .Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role);
         }
-        return await query.FirstOrDefaultAsync(x => x.Email == email);
+        return await query.SingleOrDefaultAsync(x => x.Email == email);
     }
 }

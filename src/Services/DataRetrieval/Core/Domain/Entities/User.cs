@@ -27,7 +27,6 @@ public class User : BaseEntity
     #region Navigation
     
     public ICollection<UserRole> UserRoles { get; set; } = [];
-    public ICollection<News> NewsArticles { get; set; } = [];
     public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 
     #endregion

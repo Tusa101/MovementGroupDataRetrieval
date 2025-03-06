@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-using Application.Abstractions.MediatR;
-using Domain.Entities.Abstractions;
+﻿using Application.Abstractions.MediatR;
 
 namespace Application.Features.Users.Commands.RegisterUser;
 public sealed record RegisterUserCommand(
