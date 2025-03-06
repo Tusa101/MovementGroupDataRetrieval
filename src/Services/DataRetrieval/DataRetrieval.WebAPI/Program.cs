@@ -1,11 +1,13 @@
 
 using System;
 using System.Data;
+using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
 using Domain.Abstractions;
 using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
 using Infrastructure.Configuration.Options;
+using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Mapper;
@@ -60,6 +62,8 @@ public static class Program
             factory.GetRequiredService<ApplicationDbContext>());
         builder.Services.AddScoped<IDbConnection>(
                 factory => factory.GetRequiredService<ApplicationDbContext>().Database.GetDbConnection());
+
+        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
 

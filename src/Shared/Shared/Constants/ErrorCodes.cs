@@ -1,4 +1,4 @@
-﻿namespace Domain.CommonConstants;
+﻿namespace Shared.Constants;
 public static class ErrorCodes
 {
     public const string ValidationError = "Error_Validation";

@@ -18,7 +18,7 @@ public class News : BaseEntity
     public int AuthorId { get; set; }
 
     [ForeignKey($"{nameof(AuthorId)}")]
-    public UserProfile Author { get; set; }
+    public User Author { get; set; }
 
     public bool IsPublished { get; set; }
 }
