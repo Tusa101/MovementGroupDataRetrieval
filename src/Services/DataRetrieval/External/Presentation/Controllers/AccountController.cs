@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Features.Users.Commands.LoginUser;
 using Application.Features.Users.Commands.RegisterUser;
+using Application.Features.Users.Commands.RevokeTokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Shared.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -32,6 +35,18 @@ public class AccountController : ApiController
     public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
     {
         var command = Mapper.Map<LoginUserCommand>(request);
+
+        return Ok(await Sender.Send(command));
+    }
+
+    [Authorize]
+    [HttpPost(HttpEndpoints.Account.RevokeTokens)]
+    [SwaggerOperation(Summary = "Revoke tokens")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    public async Task<IActionResult> RevokeTokens()
+    {
+        var command = new RevokeTokensCommand(
+            new Guid(HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub)!));
 
         return Ok(await Sender.Send(command));
     }

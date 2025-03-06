@@ -79,7 +79,7 @@ public static class Program
 
         builder.Services.AddRepositories();
 
-        
+        builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddAuth(builder.Configuration);
 
