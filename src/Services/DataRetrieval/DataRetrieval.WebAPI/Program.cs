@@ -63,14 +63,14 @@ public static class Program
         // Add health checks
         builder.Services.AddHealthChecks();
 
-        // Get Redis connection options from configuration
+        // Get Cache connection options from configuration
         var redisOptions = builder.Configuration
             .GetSection(RedisConnectionOptions.Section)
             .Get<RedisConnectionOptions>()
             ?? throw new NullReferenceException(
-                $"{nameof(RedisConnectionOptions)} object is null. Redis connection options not found");
+                $"{nameof(RedisConnectionOptions)} object is null. Cache connection options not found");
 
-        // Add custom data caching using Redis
+        // Add custom data caching using Cache
         builder.Services.AddCustomDataCaching(redisOptions);
         
         builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();

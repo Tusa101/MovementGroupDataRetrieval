@@ -1,7 +1,7 @@
 ﻿namespace Infrastructure.Configuration.Options;
 
 /// <summary>
-/// Represents the options for connecting to a Redis database.
+/// Represents the options for connecting to a Cache database.
 /// </summary>
 public sealed class RedisConnectionOptions
 {
@@ -11,7 +11,7 @@ public sealed class RedisConnectionOptions
     public const string Section = "RedisConnection";
 
     /// <summary>
-    /// Gets or sets the connection string for the Redis database.
+    /// Gets or sets the connection string for the Cache database.
     /// </summary>
     /// <value>The connection string.</value>
     public string ConnectionString { get; set; }
