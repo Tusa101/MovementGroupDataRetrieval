@@ -37,7 +37,8 @@ public class User : BaseEntity
     string email,
     string? firstName,
     string? lastname,
-    string passwordHash)
+    string passwordHash,
+    Guid? id = null)
     {
         return new User
         {
@@ -47,6 +48,7 @@ public class User : BaseEntity
             LastName = lastname,
             PasswordHash = passwordHash,
             RegistrationDate = DateTimeOffset.UtcNow,
+            Id = id ?? Guid.NewGuid()
         };
     } 
     #endregion

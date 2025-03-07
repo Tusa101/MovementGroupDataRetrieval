@@ -4,9 +4,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Features.Users.Commands.LoginByRefresh;
 using Application.Features.Users.Commands.LoginUser;
 using Application.Features.Users.Commands.RegisterUser;
 using Application.Features.Users.Commands.RevokeTokens;
+using Domain.Entities;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,15 +42,32 @@ public class AccountController : ApiController
         return Ok(await Sender.Send(command));
     }
 
+    [AllowAnonymous]
+    [HttpPost(HttpEndpoints.Account.RefreshToken)]
+    [SwaggerOperation(Summary = "Refresh token")]
+    [ProducesResponseType(typeof(LoginByRefreshResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> RefreshToken([FromBody] LoginByRefreshRequest request)
+    {
+        var command = Mapper.Map<LoginByRefreshCommand>(request);
+
+        return Ok(await Sender.Send(command));
+    }
+
     [Authorize]
     [HttpPost(HttpEndpoints.Account.RevokeTokens)]
     [SwaggerOperation(Summary = "Revoke tokens")]
-    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RevokeTokensResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> RevokeTokens()
     {
-        var command = new RevokeTokensCommand(
-            new Guid(HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub)!));
+        Guid? id = Guid.TryParse(HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier),
+                out var parsed)
+            ? parsed : null;
 
-        return Ok(await Sender.Send(command));
+
+        return id is null? 
+            BadRequest() : 
+            Ok(await Sender.Send(
+                new RevokeTokensCommand((Guid)id)
+            ));
     }
 }

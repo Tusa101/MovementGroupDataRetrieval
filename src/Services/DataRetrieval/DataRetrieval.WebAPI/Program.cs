@@ -6,6 +6,7 @@ using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
 using Domain.Abstractions;
 using Domain.Abstractions.RepositoryInterfaces;
+using Domain.Entities;
 using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
 using Infrastructure.Configuration.Options;
@@ -119,11 +120,27 @@ public static class Program
         }));
 
         var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-        lifetime.ApplicationStopping.Register(async() =>
+        lifetime.ApplicationStarted.Register(async() =>
         {
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await db.Database.MigrateAsync();
+
+            await db.Database.BeginTransactionAsync(new CancellationToken());
+            try
+            {
+                await DbContextSeed.SeedUsers(db.Set<User>());
+                await DbContextSeed.SeedRoles(db.Set<Role>());
+                await DbContextSeed.SeedUserRoles(db.Set<UserRole>());
+
+                await db.SaveChangesAsync();
+                await db.Database.CommitTransactionAsync();
+            }
+            catch (Exception)
+            {
+                await db.Database.RollbackTransactionAsync();
+                throw;
+            }
         });
 
         app.UseAuthentication();

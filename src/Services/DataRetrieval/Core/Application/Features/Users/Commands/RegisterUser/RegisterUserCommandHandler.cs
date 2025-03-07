@@ -3,9 +3,14 @@ using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using Domain.Exceptions;
 using Infrastructure.Utilities;
+using Shared.Constants;
 
 namespace Application.Features.Users.Commands.RegisterUser;
-public class RegisterUserCommandHandler(IUserRepository userRepository) : ICommandHandler<RegisterUserCommand, RegisterUserResponse>
+public class RegisterUserCommandHandler(
+    IUserRepository userRepository, 
+    IUserRoleRepository userRoleRepository,
+    IRoleRepository roleRepository) :
+    ICommandHandler<RegisterUserCommand, RegisterUserResponse>
 {
     public async Task<RegisterUserResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
@@ -22,6 +27,14 @@ public class RegisterUserCommandHandler(IUserRepository userRepository) : IComma
             PasswordHasher.Hash(request.Password));
 
         await userRepository.Add(user);
+
+        var defaultRole = await roleRepository.GetByNameAsync(ApplicationRoles.User);
+
+        await userRoleRepository.Add(new UserRole
+        {
+            UserId = user.Id,
+            RoleId = defaultRole.Id
+        });
 
         return new(user.Id);
     }
