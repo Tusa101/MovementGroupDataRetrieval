@@ -7,11 +7,6 @@ public static class HttpEndpoints
         public const string RegisterUser = "register-user";
         public const string LoginUser = "login-user";
         public const string RefreshToken = "refresh-token";
-        public const string RevokeToken = "revoke-token";
-    }
-
-    public static class News
-    {
-        
+        public const string RevokeTokens = "revoke-tokens";
     }
 }

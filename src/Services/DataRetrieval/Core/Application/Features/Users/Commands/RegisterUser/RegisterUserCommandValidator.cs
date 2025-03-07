@@ -6,17 +6,26 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 {
     public RegisterUserCommandValidator()
     {
-        RuleFor(x => x.Email).EmailAddress().NotEmpty();
-        RuleFor(x => x.Password).Length(
-            ValidationConstants.MinPasswordLength, 
-            ValidationConstants.MaxPasswordLength)
+        RuleFor(x => x.Email)
+            .EmailAddress()
+            .NotNull()
+            .NotEmpty();
+        RuleFor(x => x.Password)
+            .Length(
+                ValidationConstants.MinPasswordLength, 
+                ValidationConstants.MaxPasswordLength)
             .Must(x => 
                 x.Any(c => !char.IsLetterOrDigit(c)) && 
                 x.Any(c => char.IsUpper(c)) &&
                 x.Any(c => char.IsLower(c)) &&
                 x.Any(c => char.IsLetterOrDigit(c)) &&
                 !x.Any(c => char.IsWhiteSpace(c)))
-            .NotNull().NotEmpty();
-        RuleFor(x => x.NickName).NotNull().NotEmpty();
+            .NotNull()
+            .NotEmpty();
+        RuleFor(x => x.NickName)
+            .MinimumLength(ValidationConstants.MinNickNameLength)
+            .MaximumLength(ValidationConstants.MaxNickNameLength)
+            .NotNull()
+            .NotEmpty();
     }
 }

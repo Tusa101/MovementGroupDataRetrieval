@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{A079BC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F434BE70-AECE-49F5-90D9-1342934A2427}"
 	ProjectSection(SolutionItems) = preProject
+		docs\HELPERS.md = docs\HELPERS.md
 		docs\README.md = docs\README.md
 	EndProjectSection
 EndProject
@@ -29,19 +30,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{013B060F-8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{633F5053-7D13-4745-AE88-92671004488E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataRetrieval.WebAPI", "src\Services\DataRetrieval\DataRetrieval.WebAPI\DataRetrieval.WebAPI.csproj", "{33EA1829-D3DE-49F4-AED2-1868520ED08E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataRetrieval.WebAPI", "src\Services\DataRetrieval\DataRetrieval.WebAPI\DataRetrieval.WebAPI.csproj", "{33EA1829-D3DE-49F4-AED2-1868520ED08E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Services\DataRetrieval\Core\Application\Application.csproj", "{A9FD4DA8-23A9-45A4-AA22-3DD2AC02ED59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Services\DataRetrieval\Core\Application\Application.csproj", "{A9FD4DA8-23A9-45A4-AA22-3DD2AC02ED59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Services\DataRetrieval\Core\Domain\Domain.csproj", "{FF325BD0-1E6C-4448-84E9-7AD616577128}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Services\DataRetrieval\Core\Domain\Domain.csproj", "{FF325BD0-1E6C-4448-84E9-7AD616577128}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Services\DataRetrieval\External\Infrastructure\Infrastructure.csproj", "{10E3C9A7-1BDC-47BA-8777-E715F0E06A75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Services\DataRetrieval\External\Infrastructure\Infrastructure.csproj", "{10E3C9A7-1BDC-47BA-8777-E715F0E06A75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "src\Services\DataRetrieval\External\Presentation\Presentation.csproj", "{863F6930-C5DD-43DB-BB99-843D0F122C51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "src\Services\DataRetrieval\External\Presentation\Presentation.csproj", "{863F6930-C5DD-43DB-BB99-843D0F122C51}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{5AF65FE6-D810-403F-9F6C-817A7ACC82AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared\Shared.csproj", "{0AC8CAA6-9914-43DA-AE43-F03B4E34232C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared\Shared.csproj", "{0AC8CAA6-9914-43DA-AE43-F03B4E34232C}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{49DA28C1-C022-40FE-8E73-811B5ADD031D}"
 EndProject

@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Data\Commands\AddData\" />
+    <Folder Include="Features\Data\Commands\UpdateData\" />
+    <Folder Include="Features\Data\Queries\GetData\" />
     <Folder Include="Features\Users\Queries\" />
   </ItemGroup>
 

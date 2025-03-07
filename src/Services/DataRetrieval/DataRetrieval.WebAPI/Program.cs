@@ -1,15 +1,22 @@
 
 using System;
 using System.Data;
+using System.Text;
 using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
 using Domain.Abstractions;
+using Domain.Abstractions.RepositoryInterfaces;
+using Domain.Entities;
 using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
 using Infrastructure.Configuration.Options;
+using Infrastructure.Repositories;
+using Infrastructure.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Presentation.Mapper;
 
 namespace DataRetrieval.WebAPI;
@@ -25,7 +32,7 @@ public static class Program
     /// <param name="args">The command-line arguments.</param>
     public static void Main(string[] args)
     {
-        // Create a new WebApplication builder
+        // CreateToken a new WebApplication builder
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -41,9 +48,17 @@ public static class Program
 
         var applicationAssembly = typeof(Application.AssemblyReference).Assembly;
 
-        builder.Services.AddAutoMapper(m => m.AddProfile<ApplicationMappingProfile>());
+        builder.Services.AddAutoMapper(m => 
+        {
+            m.AddProfile<AccountMappingProfile>();
+            m.AddProfile<DataMappingProfile>();
+        });
 
-        builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(applicationAssembly));
+        builder.Services.AddMediatR(c =>
+        {
+            c.RegisterServicesFromAssembly(applicationAssembly);
+            c.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
+        });
 
         // Add health checks
         builder.Services.AddHealthChecks();
@@ -57,15 +72,25 @@ public static class Program
 
         // Add custom data caching using Redis
         builder.Services.AddCustomDataCaching(redisOptions);
+        
+        builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
 
         builder.Services.AddScoped<IUnitOfWork>(factory => 
             factory.GetRequiredService<ApplicationDbContext>());
+
+        builder.Services.AddDbContext<ApplicationDbContext>(o =>
+            o.UseNpgsql(builder.Configuration.GetRequiredSection("PostgresConnection:ConnectionString").Value!));
+
         builder.Services.AddScoped<IDbConnection>(
                 factory => factory.GetRequiredService<ApplicationDbContext>().Database.GetDbConnection());
 
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
+        builder.Services.AddRepositories();
+
+        builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddAuth(builder.Configuration);
 
         // Build the application
         var app = builder.Build();
@@ -95,14 +120,31 @@ public static class Program
         }));
 
         var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-        lifetime.ApplicationStopping.Register(async() =>
+        lifetime.ApplicationStarted.Register(async() =>
         {
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await db.Database.MigrateAsync();
+
+            await db.Database.BeginTransactionAsync(new CancellationToken());
+            try
+            {
+                await DbContextSeed.SeedUsers(db.Set<User>());
+                await DbContextSeed.SeedRoles(db.Set<Role>());
+                await DbContextSeed.SeedUserRoles(db.Set<UserRole>());
+
+                await db.SaveChangesAsync();
+                await db.Database.CommitTransactionAsync();
+            }
+            catch (Exception)
+            {
+                await db.Database.RollbackTransactionAsync();
+                throw;
+            }
         });
 
-        // Enable authorization
+        app.UseAuthentication();
+
         app.UseAuthorization();
 
 

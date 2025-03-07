@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -10,7 +8,7 @@ namespace Infrastructure.Configuration.Extensions;
 /// <summary>
 /// Extension methods for adding SwaggerGen with authentication to an IServiceCollection.
 /// </summary>
-public static class ServiceCollectionExtensions
+public static class SwaggerExtension
 {
     /// <summary>
     /// Adds SwaggerGen with authentication to the IServiceCollection.

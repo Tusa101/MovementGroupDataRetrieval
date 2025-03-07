@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-using Application.Abstractions.MediatR;
-using Domain.Entities.Abstractions;
+﻿using Application.Abstractions.MediatR;
 
 namespace Application.Features.Users.Commands.RegisterUser;
 public sealed record RegisterUserCommand(
@@ -8,4 +6,4 @@ public sealed record RegisterUserCommand(
     string Password,
     string NickName,
     string? FirstName,
-    string? LastName) : ICommand<UserId>;
+    string? LastName) : ICommand<RegisterUserResponse>;
