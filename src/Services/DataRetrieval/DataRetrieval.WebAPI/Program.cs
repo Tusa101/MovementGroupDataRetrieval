@@ -47,7 +47,11 @@ public static class Program
 
         var applicationAssembly = typeof(Application.AssemblyReference).Assembly;
 
-        builder.Services.AddAutoMapper(m => m.AddProfile<ApplicationMappingProfile>());
+        builder.Services.AddAutoMapper(m => 
+        {
+            m.AddProfile<AccountMappingProfile>();
+            m.AddProfile<DataMappingProfile>();
+        });
 
         builder.Services.AddMediatR(c =>
         {
@@ -72,6 +76,10 @@ public static class Program
 
         builder.Services.AddScoped<IUnitOfWork>(factory => 
             factory.GetRequiredService<ApplicationDbContext>());
+
+        builder.Services.AddDbContext<ApplicationDbContext>(o =>
+            o.UseNpgsql(builder.Configuration.GetRequiredSection("PostgresConnection:ConnectionString").Value!));
+
         builder.Services.AddScoped<IDbConnection>(
                 factory => factory.GetRequiredService<ApplicationDbContext>().Database.GetDbConnection());
 
@@ -82,9 +90,6 @@ public static class Program
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddAuth(builder.Configuration);
-
-        
-
 
         // Build the application
         var app = builder.Build();

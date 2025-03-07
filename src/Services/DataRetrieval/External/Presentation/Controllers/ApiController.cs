@@ -19,7 +19,7 @@ public abstract class ApiController : ControllerBase
     /// HttpContext's RequestServices.
     /// </summary>
     protected IMapper Mapper => 
-        _mapper ??= HttpContext.RequestServices.GetService<IMapper>();
+        _mapper ??= HttpContext.RequestServices.GetService<IMapper>()!;
 
     private ISender _sender;
 
@@ -28,5 +28,5 @@ public abstract class ApiController : ControllerBase
     /// HttpContext's RequestServices.
     /// </summary>
     protected ISender Sender =>
-        _sender ??= HttpContext.RequestServices.GetService<ISender>();
+        _sender ??= HttpContext.RequestServices.GetService<ISender>()!;
 }

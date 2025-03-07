@@ -3,4 +3,4 @@ using Application.Abstractions.MediatR;
 
 namespace Application.Features.Users.Commands.RevokeTokens;
 public sealed record RevokeTokensCommand(
-    Guid UserId) : ICommand<bool>;
+    Guid UserId) : ICommand<RevokeTokensResponse>;

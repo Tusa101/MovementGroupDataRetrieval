@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configuration.DataAccess.EntityConfigurations;
-public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
+public class UserCofiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<UserRole> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("user_roles", SchemasNames.Identity);
+        builder.ToTable("users", SchemasNames.Identity);
     }
 }

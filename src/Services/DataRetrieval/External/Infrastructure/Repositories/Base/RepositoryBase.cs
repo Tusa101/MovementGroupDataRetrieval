@@ -89,7 +89,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>
 
     public virtual async Task Update(T entity)
     {
-        var existingEntity = await _dbSet.AsNoTracking().FirstOrDefaultAsync(p => p.Id == entity.Id)
+        _ = await _dbSet.AsNoTracking().FirstOrDefaultAsync(p => p.Id == entity.Id)
             ?? throw new NotFoundException(typeof(T).FullName!, entity.Id);
         _dbSet.Attach(entity);
         _dbContext.Entry(entity).State = EntityState.Modified;

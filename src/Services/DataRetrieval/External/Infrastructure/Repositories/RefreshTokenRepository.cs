@@ -15,4 +15,14 @@ public class RefreshTokenRepository(ApplicationDbContext dbContext) :
         
         return true;
     }
+
+    public async Task<RefreshToken?> GetByToken(string token, bool includeUser = false)
+    {
+        var query = _dbSet.AsNoTracking();
+        if (includeUser)
+        {
+            query = query.Include(r => r.User);
+        }
+        return await query.FirstOrDefaultAsync(r => r.Token == token);
+    }
 }

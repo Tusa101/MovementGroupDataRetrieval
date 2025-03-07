@@ -26,8 +26,8 @@ public class User : BaseEntity
 
     #region Navigation
     
-    public ICollection<UserRole> UserRoles { get; set; } = [];
-    public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
+    public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 
     #endregion
 
