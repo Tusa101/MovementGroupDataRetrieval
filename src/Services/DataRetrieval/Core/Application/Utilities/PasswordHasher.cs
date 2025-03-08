@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Utilities;
+namespace Application.Utilities;
 public static class PasswordHasher
 {
     private const int SaltSize = 16;

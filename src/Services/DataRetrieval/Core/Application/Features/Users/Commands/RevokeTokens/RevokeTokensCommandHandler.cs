@@ -1,8 +1,5 @@
 ﻿using Application.Abstractions.MediatR;
 using Domain.Abstractions.RepositoryInterfaces;
-using Domain.Entities;
-using Domain.Exceptions;
-using Infrastructure.Utilities;
 
 namespace Application.Features.Users.Commands.RevokeTokens;
 public sealed class RevokeTokensCommandHandler(

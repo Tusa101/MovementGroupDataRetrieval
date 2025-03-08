@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Configuration.Options;
+﻿namespace Shared.Options;
 
 /// <summary>
 /// Represents the options for connecting to a Cache database.

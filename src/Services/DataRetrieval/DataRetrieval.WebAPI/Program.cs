@@ -1,23 +1,15 @@
-
-using System;
 using System.Data;
-using System.Text;
 using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
 using Domain.Abstractions;
-using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
-using Infrastructure.Configuration.Options;
-using Infrastructure.Repositories;
-using Infrastructure.Utilities;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Presentation.Mapper;
+using Shared.Options;
 
 namespace DataRetrieval.WebAPI;
 

@@ -1,10 +1,10 @@
 ﻿using Application.Abstractions.MediatR;
+using Application.Utilities;
 using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using Domain.Exceptions;
-using Infrastructure.Configuration.Options;
-using Infrastructure.Utilities;
 using Microsoft.Extensions.Options;
+using Shared.Options;
 
 namespace Application.Features.Users.Commands.LoginByRefresh;
 public sealed class LoginByRefreshCommandHandler(

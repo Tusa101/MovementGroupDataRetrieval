@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Application.Features.Users.Commands.LoginByRefresh;
 using Application.Features.Users.Commands.LoginUser;
 using Application.Features.Users.Commands.RegisterUser;
 using Application.Features.Users.Commands.RevokeTokens;
-using Domain.Entities;
-using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Shared.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 

@@ -1,9 +1,7 @@
-﻿using Domain.Entities;
-using Infrastructure.Utilities;
-using Microsoft.AspNetCore.SignalR;
+﻿using Application.Utilities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Constants;
-using System;
 
 namespace Infrastructure.Configuration.DataAccess;
 public static class DbContextSeed

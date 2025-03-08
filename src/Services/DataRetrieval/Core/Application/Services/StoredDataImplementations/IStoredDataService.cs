@@ -1,6 +1,5 @@
 ﻿using Application.Features.Data.Queries.GetStoredData;
 using Domain.Entities;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Application.Services.StoredDataImplementations;
 public interface IStoredDataService

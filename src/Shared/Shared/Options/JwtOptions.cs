@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Configuration.Options;
+﻿namespace Shared.Options;
 public class JwtOptions
 {
     public const string Section = "Jwt";

@@ -1,4 +1,4 @@
-﻿using Infrastructure.Services.StoredDataImplementations;
+﻿using Application.Services.StoredDataImplementations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configuration.Extensions;

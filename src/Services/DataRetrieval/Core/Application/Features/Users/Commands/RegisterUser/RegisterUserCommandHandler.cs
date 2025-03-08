@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.MediatR;
+using Application.Utilities;
 using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using Domain.Exceptions;
-using Infrastructure.Utilities;
 using Shared.Constants;
 
 namespace Application.Features.Users.Commands.RegisterUser;

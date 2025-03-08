@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Configuration.CachingPoliciesConfiguration;
-using Infrastructure.Configuration.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Options;
 
 namespace Infrastructure.Configuration.Extensions;
 /// <summary>
