@@ -56,6 +56,7 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
     }
 
     public bool FileExists<T>(Guid id)
+        where T : BaseEntity
     {
         var dirPath = $"{FileSystemCachingFolder}/{nameof(T)}";
         if (!Directory.Exists(dirPath))

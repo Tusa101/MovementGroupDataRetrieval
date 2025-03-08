@@ -7,6 +7,8 @@ public interface IFileSystemCachingProvider
         where T : BaseEntity;
     Task<T?> GetFromFileSystemCache<T>(Guid id, CancellationToken cancellationToken = default)
         where T : BaseEntity;
+    bool FileExists<T>(Guid id)
+        where T : BaseEntity;
     ICollection<string>? GetFilePathsByType<T>();
     bool DeleteFromFileSystemCache(string filePath);
     DateTime? ExtractExpirationFromFilePath(string filePath);

@@ -20,7 +20,7 @@ public class CacheStoredDataService(ICacheHandler cacheHandler, IOptions<Caching
         }
 
         await cacheHandler.SetAsync($"{nameof(StoredData)}_{storedData.Id}", storedData, TimeSpan.FromMinutes(_options.RedisExpirationInMinutes));
-        return Guid.NewGuid();
+        return storedData.Id;
     }
 
     public async Task<GetStoredDataResponse> GetStoredData(GetStoredDataRequest request)
