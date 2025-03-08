@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Services.StoredDataImplementations;
+﻿namespace Application.Services.StoredDataImplementations;
 public class StoredDataFactory(IEnumerable<IStoredDataService> services)
 {
     public IStoredDataService GetStoredDataService(SupportedStorage storage)

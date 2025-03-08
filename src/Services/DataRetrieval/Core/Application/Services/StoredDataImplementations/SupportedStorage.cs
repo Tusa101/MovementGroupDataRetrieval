@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Services.StoredDataImplementations;
+﻿namespace Application.Services.StoredDataImplementations;
 public enum SupportedStorage
 {
     Database = 0,

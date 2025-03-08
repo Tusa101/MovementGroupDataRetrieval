@@ -18,10 +18,12 @@
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		<PrivateAssets>all</PrivateAssets>
 	</PackageReference>
+	<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
 	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
 	<PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="8.0.12" />
+	<PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />

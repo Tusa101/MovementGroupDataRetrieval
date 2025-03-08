@@ -7,6 +7,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Application.Exceptions;
 using Infrastructure.Configuration.Extensions.Exceptions;
 using Domain.CommonConstants;
+using Infrastructure.Configuration.Exceptions;
 namespace DataRetrieval.WebAPI.Middleware;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
