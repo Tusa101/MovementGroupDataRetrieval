@@ -37,7 +37,7 @@ public sealed class LoginUserCommandHandler(
             ExpiresOnUtc = DateTime.UtcNow.AddDays(_options.RefreshTokenExpirationInDays),
         };
 
-        await refreshTokenRepository.Add(refreshToken);
+        await refreshTokenRepository.AddAsync(refreshToken);
 
         return new(token, refreshToken.Token);
     }

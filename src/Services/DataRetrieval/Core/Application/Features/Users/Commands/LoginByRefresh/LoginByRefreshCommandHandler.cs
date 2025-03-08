@@ -29,7 +29,7 @@ public sealed class LoginByRefreshCommandHandler(
         refreshToken.Token = tokenProvider.GenerateRefreshToken();
         refreshToken.ExpiresOnUtc = DateTime.UtcNow.AddDays(_options.RefreshTokenExpirationInDays);
         
-        await refreshTokenRepository.Update(refreshToken);
+        await refreshTokenRepository.UpdateAsync(refreshToken);
 
         return new(token, refreshToken.Token);
     }

@@ -1,18 +1,26 @@
 ﻿using Application.Abstractions.MediatR;
+using Application.Services.StoredDataImplementations;
 using Domain.Abstractions.RepositoryInterfaces;
+using Domain.Entities;
 using Domain.Exceptions;
 
 namespace Application.Features.Data.Commands.UpdateStoredData;
-public class UpdateStoredDataCommandHandler(IStoredDataRepository storedDataRepository) : ICommandHandler<UpdateStoredDataCommand, UpdateStoredDataResponse>
+public class UpdateStoredDataCommandHandler(StoredDataFactory storedDataFactory) : ICommandHandler<UpdateStoredDataCommand, UpdateStoredDataResponse>
 {
     public async Task<UpdateStoredDataResponse> Handle(UpdateStoredDataCommand request, CancellationToken cancellationToken)
     {
-        var data = await storedDataRepository.GetById(request.Id)
-            ?? throw new NotFoundException("StoredData", request.Id);
+        var dataService = storedDataFactory.GetStoredDataService(SupportedStorage.Database);
+
+
+        var data = await dataService.GetStoredDataAsync(request.Id);
 
         data.Content = request.Content;
 
-        await storedDataRepository.Update(data);
+        foreach (var storage in Enum.GetValues<SupportedStorage>())
+        {
+            dataService = storedDataFactory.GetStoredDataService(storage);
+            await dataService.UpdateStoredDataAsync(data);
+        }
 
         return new(data.Id, data.Content);
     }

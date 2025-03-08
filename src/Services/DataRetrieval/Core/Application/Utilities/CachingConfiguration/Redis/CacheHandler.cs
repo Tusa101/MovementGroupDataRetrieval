@@ -1,4 +1,5 @@
 ﻿using Domain.CommonConstants;
+using Domain.Exceptions;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -17,14 +18,14 @@ public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger)
     {
         try
         {
-            var value = await cache.GetStringAsync(key);
-
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return default;
-            }
+            var value = await cache.GetStringAsync(key)
+                ?? throw new NotFoundException($"{nameof(T)} cannot be found.");
 
             return System.Text.Json.JsonSerializer.Deserialize<T>(value!);
+        }
+        catch (Exception ex) when (ex is NotFoundException)
+        {
+            throw;
         }
         catch (Exception ex)
         {

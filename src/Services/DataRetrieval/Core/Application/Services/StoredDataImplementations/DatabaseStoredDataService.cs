@@ -1,22 +1,26 @@
 ﻿using Application.Features.Data.Queries.GetStoredData;
 using AutoMapper;
+using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Services.StoredDataImplementations;
-public class DatabaseStoredDataService(ISender sender, IMapper mapper) : IStoredDataService
+public class DatabaseStoredDataService(IStoredDataRepository storedDataRepository) : IStoredDataService
 {
     public SupportedStorage SupportedStorage => SupportedStorage.Database;
 
-    public Task<Guid> AddStoredData(StoredData storedData)
+    public async Task<Guid> AddStoredDataAsync(StoredData storedData)
     {
-        throw new NotImplementedException();
+        await storedDataRepository.AddAsync(storedData);
+        return storedData.Id;
     }
 
-    public async Task<GetStoredDataResponse> GetStoredData(GetStoredDataRequest request)
-    {
-        var query = mapper.Map<GetStoredDataQuery>(request);
+    public async Task<StoredData> GetStoredDataAsync(Guid id)
+        => await storedDataRepository.GetByIdAsync(id);
 
-        return await sender.Send(query);
+    public async Task<bool> UpdateStoredDataAsync(StoredData storedData)
+    {
+        await storedDataRepository.UpdateAsync(storedData);
+        return true;
     }
 }

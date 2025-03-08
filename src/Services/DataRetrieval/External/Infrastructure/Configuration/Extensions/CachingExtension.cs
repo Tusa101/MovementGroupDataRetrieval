@@ -20,7 +20,7 @@ public static class CachingExtension
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Get Cache connection options from configuration
+        // GetAsync Cache connection options from configuration
         var redisOptions = configuration
             .GetSection(RedisConnectionOptions.Section)
             .Get<RedisConnectionOptions>()

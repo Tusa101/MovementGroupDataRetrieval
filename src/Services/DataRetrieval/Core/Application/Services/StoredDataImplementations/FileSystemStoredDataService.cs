@@ -12,24 +12,24 @@ public class FileSystemStoredDataService(IFileSystemCachingProvider cacheHandler
     private readonly CachingOptions _options = options.Value;
     public SupportedStorage SupportedStorage => SupportedStorage.FileSystem;
 
-    public async Task<Guid> AddStoredData(StoredData storedData)
+    public async Task<Guid> AddStoredDataAsync(StoredData storedData)
     {
         if(cacheHandler.FileExists<StoredData>(storedData.Id))
         {
             throw new DuplicateValueException(nameof(StoredData), storedData.Id);
         }
-        await cacheHandler.AddToFileSystemCache(storedData, DateTime.UtcNow.AddMinutes(_options.FileSystemExpirationInMinutes));
+        await cacheHandler.AddToFileSystemCacheAsync(storedData, DateTime.UtcNow.AddMinutes(_options.FileSystemExpirationInMinutes));
         
         return storedData.Id;
     }
 
-    public Task<GetStoredDataResponse> GetStoredData(GetStoredDataRequest request)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<StoredData> GetStoredDataAsync(Guid id) 
+        => await cacheHandler.GetFromFileSystemCacheAsync<StoredData>(id);
 
-    //public async Task DeleteStoredData(Guid id)
-    //{
-    //    await cacheHandler.DeleteAsync($"{nameof(StoredData)}_{id}");
-    //}
+    public async Task<bool> UpdateStoredDataAsync(StoredData storedData)
+    {
+        await cacheHandler.DeleteFromFileSystemCacheAsync<StoredData>(storedData.Id);
+
+        return await cacheHandler.AddToFileSystemCacheAsync(storedData, DateTime.UtcNow.AddMinutes(_options.FileSystemExpirationInMinutes));
+    }
 }

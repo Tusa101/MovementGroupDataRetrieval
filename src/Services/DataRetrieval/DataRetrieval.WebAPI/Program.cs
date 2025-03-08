@@ -27,14 +27,14 @@ public static class Program
         // CreateToken a new WebApplication builder
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        // AddAsync services to the container.
         var presentationAssembly = typeof(Presentation.AssemblyReference).Assembly;
 
-        // Add controllers from the presentation assembly
+        // AddAsync controllers from the presentation assembly
         builder.Services.AddControllers()
             .AddApplicationPart(presentationAssembly);
 
-        // Add Swagger/OpenAPI configuration
+        // AddAsync Swagger/OpenAPI configuration
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGenWithAuth();
 
@@ -52,10 +52,10 @@ public static class Program
             c.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
         });
 
-        // Add health checks
+        // AddAsync health checks
         builder.Services.AddHealthChecks();
 
-        // Add custom data caching using Cache
+        // AddAsync custom data caching using Cache
         builder.Services.AddCustomDataCaching(builder.Configuration);
         
         builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();

@@ -1,2 +1,2 @@
 ﻿namespace Application.Features.Data.Commands.AddStoredData;
-public sealed record class AddStoredDataRequest(Guid Id, string Content);
+public sealed record class AddStoredDataRequest(string Content);

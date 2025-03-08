@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
 
 namespace Application.Features.Data.Commands.AddStoredData;
-internal class AddStoredDataCommandValidator
+public class AddStoredDataCommandValidator : AbstractValidator<AddStoredDataCommand>
 {
+    public AddStoredDataCommandValidator()
+    {
+        RuleFor(x => x.Content)
+            .NotNull()
+            .NotEmpty();
+    }
 }

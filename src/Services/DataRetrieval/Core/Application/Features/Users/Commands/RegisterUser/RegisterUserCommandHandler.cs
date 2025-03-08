@@ -26,11 +26,11 @@ public class RegisterUserCommandHandler(
             request.LastName, 
             PasswordHasher.Hash(request.Password));
 
-        await userRepository.Add(user);
+        await userRepository.AddAsync(user);
 
         var defaultRole = await roleRepository.GetByNameAsync(ApplicationRoles.User);
 
-        await userRoleRepository.Add(new UserRole
+        await userRoleRepository.AddAsync(new UserRole
         {
             UserId = user.Id,
             RoleId = defaultRole!.Id

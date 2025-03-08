@@ -12,7 +12,7 @@ public class CacheStoredDataService(ICacheHandler cacheHandler, IOptions<Caching
 
     public SupportedStorage SupportedStorage => SupportedStorage.Cache;
 
-    public async Task<Guid> AddStoredData(StoredData storedData)
+    public async Task<Guid> AddStoredDataAsync(StoredData storedData)
     {
         if(await cacheHandler.ExistsAsync($"{nameof(StoredData)}_{storedData.Id}"))
         {
@@ -23,20 +23,17 @@ public class CacheStoredDataService(ICacheHandler cacheHandler, IOptions<Caching
         return storedData.Id;
     }
 
-    public async Task<GetStoredDataResponse> GetStoredData(GetStoredDataRequest request)
+    public async Task<StoredData> GetStoredDataAsync(Guid id)
     {
-        if (!await cacheHandler.ExistsAsync($"{nameof(StoredData)}_{request.Id}"))
-        {
-            throw new NotFoundException(nameof(StoredData), request.Id);
-        }
+        var storedData = await cacheHandler.GetAsync<StoredData>($"{nameof(StoredData)}_{id}");
 
-        var storedData = await cacheHandler.GetAsync<StoredData>($"{nameof(StoredData)}_{request.Id}");
-
-        return new(storedData!);
+        return storedData!;
     }
 
-    public async Task DeleteStoredData(Guid id)
+    public async Task<bool> UpdateStoredDataAsync(StoredData storedData)
     {
-        await cacheHandler.DeleteAsync($"{nameof(StoredData)}_{id}");
+        await cacheHandler.DeleteAsync($"{nameof(StoredData)}_{storedData.Id}");
+        await cacheHandler.SetAsync($"{nameof(StoredData)}_{storedData.Id}", storedData, TimeSpan.FromMinutes(_options.RedisExpirationInMinutes));
+        return true;
     }
 }

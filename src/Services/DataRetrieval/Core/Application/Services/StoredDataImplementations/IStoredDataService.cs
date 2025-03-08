@@ -5,6 +5,7 @@ namespace Application.Services.StoredDataImplementations;
 public interface IStoredDataService
 {
     SupportedStorage SupportedStorage { get; }
-    Task<GetStoredDataResponse> GetStoredData(GetStoredDataRequest request);
-    Task<Guid> AddStoredData(StoredData storedData);
+    Task<StoredData> GetStoredDataAsync(Guid id);
+    Task<Guid> AddStoredDataAsync(StoredData storedData);
+    Task<bool> UpdateStoredDataAsync(StoredData storedData);
 }
