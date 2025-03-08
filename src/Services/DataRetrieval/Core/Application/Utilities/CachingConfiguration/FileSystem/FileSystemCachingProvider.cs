@@ -1,16 +1,13 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-using System.Text;
+﻿using System.Globalization;
 using System.Text.Json;
 using Domain.Exceptions;
 using Domain.Primitives;
-using Microsoft.OpenApi.Writers;
 
-namespace Infrastructure.Configuration.CachingPoliciesConfiguration;
+namespace Application.Utilities.CachingConfiguration.FileSystem;
 public class FileSystemCachingProvider : IFileSystemCachingProvider
 {
     public const string FileSystemCachingFolder = "/data";
-    public async Task<bool> AddToFileSystemCache<T>(T obj, DateTime expirationTime, CancellationToken cancellation)
+    public async Task<bool> AddToFileSystemCache<T>(T obj, DateTime expirationTime, CancellationToken cancellation = default)
         where T : BaseEntity
     {
         if (!Directory.Exists($"{FileSystemCachingFolder}/{nameof(T)}"))
@@ -27,7 +24,7 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
         return true;
     }
 
-    public async Task<T?> GetFromFileSystemCache<T>(Guid id, CancellationToken cancellationToken)
+    public async Task<T?> GetFromFileSystemCache<T>(Guid id, CancellationToken cancellationToken = default)
         where T : BaseEntity
     {
         var dirPath = $"{FileSystemCachingFolder}/{nameof(T)}";
@@ -56,6 +53,18 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
         }
 
         return Directory.EnumerateFiles(dirPath).ToList();
+    }
+
+    public bool FileExists<T>(Guid id)
+    {
+        var dirPath = $"{FileSystemCachingFolder}/{nameof(T)}";
+        if (!Directory.Exists(dirPath))
+        {
+            throw new DirectoryNotFoundException($"{FileSystemCachingFolder}/{nameof(T)}");
+        }
+
+        var filePath = GetFilePath<T>(id, dirPath);
+        return File.Exists(filePath);
     }
 
     public bool DeleteFromFileSystemCache(string filePath)
@@ -95,19 +104,8 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
             .Select(fi => fi.FullName)
             .SingleOrDefault() ?? throw new NotFoundException(nameof(T), id);
 
-        var dateTime = ExtractExpirationFromFilePath(filePath);
-
-        if (dateTime is null)
-        {
-            File.Delete(dirPath);
-            throw new NotFoundException(nameof(T), id);
-        }
-
-        if (dateTime < DateTime.UtcNow)
-        {
-            File.Delete(filePath);
-            throw new NotFoundException(nameof(T), id);
-        }
+        var dateTime = ExtractExpirationFromFilePath(filePath) 
+            ?? throw new NotFoundException(nameof(T), id);
 
         return filePath;
     }

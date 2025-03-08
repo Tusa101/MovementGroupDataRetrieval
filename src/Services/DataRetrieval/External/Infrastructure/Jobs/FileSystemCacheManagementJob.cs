@@ -1,5 +1,5 @@
-﻿using Domain.Primitives;
-using Infrastructure.Configuration.CachingPoliciesConfiguration;
+﻿using Application.Utilities.CachingConfiguration.FileSystem;
+using Domain.Primitives;
 using Quartz;
 
 namespace Infrastructure.Jobs;
@@ -15,11 +15,14 @@ public class FileSystemCacheManagementJob(IFileSystemCachingProvider fileSystemC
 
         foreach (var entitytype in entityTypes)
         {
-            var filePaths = fileSystemCachingProvider.GetType()
+            if (fileSystemCachingProvider.GetType()
                 .GetMethod(nameof(FileSystemCachingProvider.GetFilePathsByType))?
-                .MakeGenericMethod([entitytype])?
-                .Invoke(fileSystemCachingProvider, null) as ICollection<string>;
-            
+                .MakeGenericMethod(entitytype)?
+                .Invoke(fileSystemCachingProvider, null) is not ICollection<string> filePaths)
+            {
+                continue;
+            }
+
             foreach (var filePath in filePaths)
             {
                 var expirationTime = fileSystemCachingProvider.ExtractExpirationFromFilePath(filePath);

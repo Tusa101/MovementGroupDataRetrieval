@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Configuration.CachingPoliciesConfiguration;
+﻿namespace Application.Utilities.CachingConfiguration.Redis;
 
 /// <summary>
 /// Represents a handler for caching operations.
@@ -42,5 +42,5 @@ public interface ICacheHandler
     /// </summary>
     /// <param name="key">The key of the value to check.</param>
     /// <returns>True if the value exists, otherwise false.</returns>
-    Task<bool> Exists(string key);
+    Task<bool> ExistsAsync(string key);
 }

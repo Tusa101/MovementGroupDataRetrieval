@@ -33,7 +33,7 @@ public class RegisterUserCommandHandler(
         await userRoleRepository.Add(new UserRole
         {
             UserId = user.Id,
-            RoleId = defaultRole.Id
+            RoleId = defaultRole!.Id
         });
 
         return new(user.Id);

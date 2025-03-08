@@ -1,4 +1,6 @@
-﻿using Infrastructure.Configuration.CachingPoliciesConfiguration;
+﻿using Application.Utilities.CachingConfiguration.FileSystem;
+using Application.Utilities.CachingConfiguration.Redis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Options;
 
@@ -16,8 +18,16 @@ public static class CachingExtension
     /// <returns>The updated IServiceCollection.</returns>
     public static IServiceCollection AddCustomDataCaching(
         this IServiceCollection services,
-        RedisConnectionOptions redisOptions)
+        IConfiguration configuration)
     {
+        // Get Cache connection options from configuration
+        var redisOptions = configuration
+            .GetSection(RedisConnectionOptions.Section)
+            .Get<RedisConnectionOptions>()
+            ?? throw new NullReferenceException(
+                $"{nameof(RedisConnectionOptions)} object is null. Cache connection options not found");
+
+        services.Configure<CachingOptions>(configuration.GetSection(CachingOptions.Section));
         services.AddStackExchangeRedisOutputCache(options =>
         {
             options.Configuration = redisOptions.ConnectionString;

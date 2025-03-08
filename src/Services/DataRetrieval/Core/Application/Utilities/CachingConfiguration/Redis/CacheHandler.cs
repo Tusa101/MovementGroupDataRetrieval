@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using Domain.CommonConstants;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace Infrastructure.Configuration.CachingPoliciesConfiguration;
+namespace Application.Utilities.CachingConfiguration.Redis;
 
 /// <summary>
 /// Represents a handler for caching operations.
 /// </summary>
 public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger) : ICacheHandler
 {
-    private const string CachingExceptionMessageTemplate = "{Exception}";
     private static readonly JsonSerializerSettings _jsonSerializerSettings = new() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
 
     /// <inheritdoc/>
@@ -28,7 +28,7 @@ public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger)
         }
         catch (Exception ex)
         {
-            logger.LogError(CachingExceptionMessageTemplate, ex.ToString());
+            logger.LogError(LoggingTemplates.CachingExceptionMessageTemplate, ex.ToString());
             return default;
         }
     }
@@ -55,7 +55,7 @@ public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger)
         }
         catch (Exception ex)
         {
-            logger.LogError(CachingExceptionMessageTemplate, ex.ToString());
+            logger.LogError(LoggingTemplates.CachingExceptionMessageTemplate, ex.ToString());
             return [];
         }
     }
@@ -73,7 +73,7 @@ public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger)
         }
         catch (Exception ex)
         {
-            logger.LogError(CachingExceptionMessageTemplate, ex.ToString());
+            logger.LogError(LoggingTemplates.CachingExceptionMessageTemplate, ex.ToString());
             return false;
         }
     }
@@ -88,13 +88,13 @@ public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger)
         }
         catch (Exception ex)
         {
-            logger.LogError(CachingExceptionMessageTemplate, ex.ToString());
+            logger.LogError(LoggingTemplates.CachingExceptionMessageTemplate, ex.ToString());
             return false;
         }
     }
 
     /// <inheritdoc/>
-    public async Task<bool> Exists(string key)
+    public async Task<bool> ExistsAsync(string key)
     {
         var value = await cache.GetAsync(key);
         if (value is null)
