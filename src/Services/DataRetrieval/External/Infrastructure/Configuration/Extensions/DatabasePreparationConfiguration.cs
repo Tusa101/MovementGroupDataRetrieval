@@ -39,6 +39,7 @@ public static class DatabasePreparationConfiguration
                 await DbContextSeed.SeedUsers(db.Set<User>());
                 await DbContextSeed.SeedRoles(db.Set<Role>());
                 await DbContextSeed.SeedUserRoles(db.Set<UserRole>());
+                await DbContextSeed.SeedStoredData(db.Set<StoredData>());
 
                 await db.SaveChangesAsync();
                 await db.Database.CommitTransactionAsync();
