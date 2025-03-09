@@ -105,7 +105,7 @@ public static class DbContextSeed
                 RoleId = new Guid("1ae51b43-6160-4322-80d6-378fcb1ea5a9"),
             },
         ];
-    } 
+    }
 
     #endregion
 }

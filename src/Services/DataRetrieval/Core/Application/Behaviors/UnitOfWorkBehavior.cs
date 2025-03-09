@@ -2,7 +2,6 @@
 using Application.Abstractions.MediatR;
 using Domain.Abstractions;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Behaviors;
 /// <summary>
@@ -16,7 +15,7 @@ namespace Application.Behaviors;
 /// </remarks>
 /// <param name="unitOfWork">The unit of work to be used by the behavior.</param>
 public class UnitOfWorkBehavior<TRequest, TResponse>(
-    IUnitOfWork unitOfWork) 
+    IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
 

@@ -1,12 +1,12 @@
-﻿using Domain.Abstractions;
-using System.Data;
+﻿using System.Data;
+using Domain.Abstractions;
 using Domain.Entities;
 using Infrastructure.Configuration.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Configuration.Extensions;
 public static class DatabasePreparationConfiguration

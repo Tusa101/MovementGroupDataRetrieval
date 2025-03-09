@@ -21,7 +21,7 @@ public static class CachingExtension
         IConfiguration configuration)
     {
         services.AddDistributedMemoryCache();
-        
+
         var redisOptions = configuration
             .GetSection(RedisConnectionOptions.Section)
             .Get<RedisConnectionOptions>();

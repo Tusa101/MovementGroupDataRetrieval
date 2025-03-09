@@ -7,7 +7,7 @@ using Shared.Constants;
 
 namespace Application.Features.Users.Commands.RegisterUser;
 public class RegisterUserCommandHandler(
-    IUserRepository userRepository, 
+    IUserRepository userRepository,
     IUserRoleRepository userRoleRepository,
     IRoleRepository roleRepository) :
     ICommandHandler<RegisterUserCommand, RegisterUserResponse>
@@ -20,10 +20,10 @@ public class RegisterUserCommandHandler(
         }
 
         var user = User.Create(
-            request.NickName, 
-            request.Email, 
-            request.FirstName, 
-            request.LastName, 
+            request.NickName,
+            request.Email,
+            request.FirstName,
+            request.LastName,
             PasswordHasher.Hash(request.Password));
 
         await userRepository.AddAsync(user);

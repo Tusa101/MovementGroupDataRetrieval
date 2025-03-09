@@ -1,5 +1,5 @@
-﻿using Domain.Primitives;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Domain.Primitives;
 
 namespace Domain.Abstractions;
 

@@ -8,7 +8,7 @@ namespace Application.Services;
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S2629:Logging templates should be constant", Justification = "<Pending>")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S6668:Logging arguments should be passed to the correct parameter", Justification = "<Pending>")]
 public class LoggingStoredDataServiceDecorator(
-    IStoredDataService storedDataService, 
+    IStoredDataService storedDataService,
     ILogger<LoggingStoredDataServiceDecorator> logger) : IStoredDataService
 {
     public const string SuccessLoggingTemplate = "Successfully executed {NameOfMethod} for Id {Id} with storage {SupportedStorage}";

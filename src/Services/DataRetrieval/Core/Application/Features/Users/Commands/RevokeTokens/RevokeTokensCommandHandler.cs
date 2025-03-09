@@ -9,7 +9,7 @@ public sealed class RevokeTokensCommandHandler(
     public async Task<RevokeTokensResponse> Handle(RevokeTokensCommand request, CancellationToken cancellationToken)
     {
         await refreshTokenRepository.DeleteAllByUserId(request.UserId);
-        
+
         return new(true);
     }
 }

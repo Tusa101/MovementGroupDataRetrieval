@@ -2,8 +2,6 @@
 using Application.Features.Data.Commands.AddStoredData;
 using Application.Features.Data.Commands.UpdateStoredData;
 using Application.Features.Data.Queries.GetStoredData;
-using AutoMapper;
-using Domain.Exceptions;
 using Infrastructure.Configuration.Extensions.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

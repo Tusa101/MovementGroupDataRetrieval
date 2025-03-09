@@ -8,7 +8,7 @@ using Shared.Options;
 
 namespace Application.Features.Users.Commands.LoginUser;
 public sealed class LoginUserCommandHandler(
-    IUserRepository userRepository, 
+    IUserRepository userRepository,
     IRefreshTokenRepository refreshTokenRepository,
     IOptions<JwtOptions> options,
     TokenProvider tokenProvider) :

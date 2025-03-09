@@ -1,9 +1,6 @@
-﻿using System.Diagnostics.Metrics;
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Settings.Configuration;
 
@@ -12,7 +9,7 @@ public static class LoggingExtension
 {
     public static WebApplicationBuilder AddLogging(this WebApplicationBuilder builder)
     {
-        
+
         var applicationName = Assembly.GetEntryAssembly()?.GetName().Name!;
 
 #pragma warning disable CA1305 // Specify IFormatProvider

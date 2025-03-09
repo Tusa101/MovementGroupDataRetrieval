@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Domain.Primitives;
+﻿using Domain.Primitives;
 
 namespace Domain.Entities;
 public class StoredData : BaseEntity

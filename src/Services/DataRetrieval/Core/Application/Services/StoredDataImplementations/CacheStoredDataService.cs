@@ -1,5 +1,4 @@
-﻿using Application.Features.Data.Queries.GetStoredData;
-using Application.Utilities.CachingConfiguration.Redis;
+﻿using Application.Utilities.CachingConfiguration.Redis;
 using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.Extensions.Options;
@@ -14,7 +13,7 @@ public class CacheStoredDataService(ICacheHandler cacheHandler, IOptions<Caching
 
     public async Task<Guid> AddStoredDataAsync(StoredData storedData)
     {
-        if(await cacheHandler.ExistsAsync($"{nameof(StoredData)}_{storedData.Id}"))
+        if (await cacheHandler.ExistsAsync($"{nameof(StoredData)}_{storedData.Id}"))
         {
             throw new DuplicateValueException(nameof(StoredData), storedData.Id);
         }

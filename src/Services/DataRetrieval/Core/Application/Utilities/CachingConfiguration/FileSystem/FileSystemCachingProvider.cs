@@ -145,7 +145,7 @@ public class FileSystemCachingProvider(IOptions<CachingOptions> options) : IFile
         var filePath = directory.EnumerateFiles()
             .Where(fi => fi.Name.Contains(id.ToString()))
             .Select(fi => fi.FullName)
-            .SingleOrDefault() 
+            .SingleOrDefault()
             ?? throw new NotFoundException(typeof(T).Name, id);
 
         return filePath;

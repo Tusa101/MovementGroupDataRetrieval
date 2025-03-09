@@ -1,6 +1,5 @@
 ﻿using Application.Services;
 using Application.Services.StoredDataImplementations;
-using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configuration.Extensions;

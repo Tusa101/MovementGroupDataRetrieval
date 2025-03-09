@@ -1,9 +1,9 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
-using Domain.Exceptions;
 using Application.Exceptions;
-using Infrastructure.Configuration.Extensions.Exceptions;
 using Domain.CommonConstants;
+using Domain.Exceptions;
+using Infrastructure.Configuration.Extensions.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 namespace DataRetrieval.WebAPI.Middleware;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 (kvp, value) => new ApiError(kvp.Key, value))
                 .ToArray();
         }
-        
+
         if (exception is BaseException)
         {
             statusCode = (int)HttpStatusCode.BadRequest;

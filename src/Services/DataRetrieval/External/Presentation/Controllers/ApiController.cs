@@ -18,7 +18,7 @@ public abstract class ApiController : ControllerBase
     /// Gets the mapper instance. If not already initialized, it initializes it using the
     /// HttpContext's RequestServices.
     /// </summary>
-    protected IMapper Mapper => 
+    protected IMapper Mapper =>
         _mapper ??= HttpContext.RequestServices.GetService<IMapper>()!;
 
     private IMediator _sender;

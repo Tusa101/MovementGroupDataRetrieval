@@ -20,7 +20,7 @@ public static class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
         var presentationAssembly = typeof(Presentation.AssemblyReference).Assembly;
 
         builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -29,16 +29,16 @@ public static class Program
 
         builder.Services.AddControllers()
             .AddApplicationPart(presentationAssembly);
-        
+
         builder.Services.AddEndpointsApiExplorer();
-        
+
         builder.Services.AddSwaggerGenWithAuth();
 
         builder.AddLogging();
 
         var applicationAssembly = typeof(Application.AssemblyReference).Assembly;
 
-        builder.Services.AddAutoMapper(m => 
+        builder.Services.AddAutoMapper(m =>
         {
             m.AddProfile<AccountMappingProfile>();
             m.AddProfile<DataMappingProfile>();
@@ -51,7 +51,7 @@ public static class Program
         });
 
         builder.Services.ConfigureCORS();
-        
+
         builder.Services.AddHealthChecks();
 
         builder.Host.UseSerilog();
@@ -62,7 +62,7 @@ public static class Program
 
         // AddAsync custom data caching using Cache
         builder.Services.AddCustomDataCaching(builder.Configuration);
-        
+
         builder.Services.AddDatabase(builder.Configuration);
 
         builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();

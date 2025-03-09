@@ -1,5 +1,4 @@
-﻿using Application.Features.Data.Queries.GetStoredData;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.Services.StoredDataImplementations;
 /// <summary>

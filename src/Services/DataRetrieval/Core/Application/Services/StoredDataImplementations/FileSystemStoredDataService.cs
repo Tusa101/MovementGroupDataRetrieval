@@ -12,18 +12,18 @@ public class FileSystemStoredDataService(IFileSystemCachingProvider cacheHandler
 
     public async Task<Guid> AddStoredDataAsync(StoredData storedData)
     {
-        if(cacheHandler.FileExists<StoredData>(storedData.Id))
+        if (cacheHandler.FileExists<StoredData>(storedData.Id))
         {
             throw new DuplicateValueException(nameof(StoredData), storedData.Id);
         }
 
         await cacheHandler.AddToFileSystemCacheAsync<StoredData>(storedData,
             DateTime.UtcNow.AddMinutes(_options.FileSystemExpirationInMinutes));
-        
+
         return storedData.Id;
     }
 
-    public async Task<StoredData> GetStoredDataAsync(Guid id) 
+    public async Task<StoredData> GetStoredDataAsync(Guid id)
         => await cacheHandler.GetFromFileSystemCacheAsync<StoredData>(id);
 
     public async Task<bool> UpdateStoredDataAsync(StoredData storedData)

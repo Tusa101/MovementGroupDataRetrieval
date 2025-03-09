@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.MediatR;
 using Application.Utilities;
 using Domain.Abstractions.RepositoryInterfaces;
-using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.Extensions.Options;
 using Shared.Options;
@@ -28,7 +27,7 @@ public sealed class LoginByRefreshCommandHandler(
 
         refreshToken.Token = tokenProvider.GenerateRefreshToken();
         refreshToken.ExpiresOnUtc = DateTime.UtcNow.AddDays(_options.RefreshTokenExpirationInDays);
-        
+
         await refreshTokenRepository.UpdateAsync(refreshToken);
 
         return new(token, refreshToken.Token);

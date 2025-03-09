@@ -18,7 +18,7 @@ public static class QuartzExtension
                         schedule => schedule.WithIntervalInSeconds(30).RepeatForever()));
         });
 
-        services.AddQuartzHostedService(options => 
+        services.AddQuartzHostedService(options =>
             options.WaitForJobsToComplete = true);
         return services;
     }

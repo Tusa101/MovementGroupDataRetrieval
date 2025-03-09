@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Shared.Constants;
 
 namespace Application.Features.Users.Commands.LoginByRefresh;
 /// <summary>
