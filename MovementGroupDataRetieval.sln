@@ -5,10 +5,6 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6EB4A5E2-B843-4A0B-B0AF-C7CAC085A100}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{06283C5B-F640-43C5-B682-B0E03500618B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{A079BCA1-6B13-46CA-9210-1987B08AE13D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F434BE70-AECE-49F5-90D9-1342934A2427}"
 	ProjectSection(SolutionItems) = preProject
 		docs\HELPERS.md = docs\HELPERS.md
@@ -26,6 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataRetrieval", "DataRetrieval", "{B8310DC5-523A-444A-8983-6F199E53A32C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.env = .env
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{013B060F-899C-4201-8ACD-45E775734ED8}"
 EndProject

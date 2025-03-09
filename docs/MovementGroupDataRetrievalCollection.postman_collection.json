@@ -164,7 +164,7 @@
 			"response": []
 		},
 		{
-			"name": "GetData",
+			"name": "GetDataById",
 			"request": {
 				"auth": {
 					"type": "bearer",
