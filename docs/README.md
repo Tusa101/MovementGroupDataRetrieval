@@ -1,5 +1,34 @@
 # MovementGroupDataRetieval
+## Launch requirements
 
+To launch this project you need to have installed:
+- Docker
+- Docker-compose
+- .NET 8.0
+- Redis docker container (from docker-compose file)
+- Postgres docker container (from docker-compose file)
+- Postman (for docs)
+- free ports as mentioned in .env file
+
+This solution works in docker environment, so that for testing you should run this command from root solution folder:
+`docker-compose -f docker-compose.yml up -d --build`
+After successful launch you will be able to see the API documentation in Swagger UI by following this link:
+`http://localhost:5100/swagger/index.html`
+For testing with postman you can use the collection from the docs folder of the solution:
+`MovementGroupDataRetievalCollection.postman_collection.json`
+
+If it is needed, you can change environment variables it .env file and settings in appsettings.json file.
+There are available environments as :
+- `Development`(to launch the service in debug mode), 
+- `LocalDocker`(to launch the service with other containers), 
+- `Production`. 
+
+You can change it in `ASPNETCORE_ENVIRONMENT` variable in .env file.`
+
+The resulting solution does not contain unit tests, but it is possible to add them in the future if more time is provided.
+Also the was not implemented Polly. I think there are some possible usecases for it, e.g. RateLimiter or Retry for filesystem caching.
+
+---
 ## Backend Developer Home Task - .NET API with Multi-Layered Data Storage
 
 ### *Objective*

@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F434BE70-AECE-49F5-90D9-1342934A2427}"
 	ProjectSection(SolutionItems) = preProject
 		docs\HELPERS.md = docs\HELPERS.md
+		docs\MovementGroupDataRetrievalCollection.postman_collection.json = docs\MovementGroupDataRetrievalCollection.postman_collection.json
 		docs\README.md = docs\README.md
 	EndProjectSection
 EndProject
