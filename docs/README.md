@@ -28,6 +28,8 @@ You can change it in `ASPNETCORE_ENVIRONMENT` variable in .env file.`
 The resulting solution does not contain unit tests, but it is possible to add them in the future if more time is provided.
 Also the was not implemented Polly. I think there are some possible usecases for it, e.g. RateLimiter or Retry for filesystem caching.
 
+Also not to mention that there should be added a few more endpoints for better experience, but system is flexible for that, so that it won't be so hard and time-consuming
+
 ---
 ## Backend Developer Home Task - .NET API with Multi-Layered Data Storage
 
