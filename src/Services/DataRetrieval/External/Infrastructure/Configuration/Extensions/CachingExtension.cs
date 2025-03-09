@@ -14,23 +14,22 @@ public static class CachingExtension
     /// Adds Redis and Filesystem caching to the IServiceCollection.
     /// </summary>
     /// <param name="services">The IServiceCollection to add caching to.</param>
-    /// <param name="redisOptions">The RedisConnectionOptions for the cache.</param>
+    /// <param name="configuration"></param>
     /// <returns>The updated IServiceCollection.</returns>
     public static IServiceCollection AddCustomDataCaching(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // GetAsync Cache connection options from configuration
+        services.AddDistributedMemoryCache();
+        
         var redisOptions = configuration
             .GetSection(RedisConnectionOptions.Section)
-            .Get<RedisConnectionOptions>()
-            ?? throw new NullReferenceException(
-                $"{nameof(RedisConnectionOptions)} object is null. Cache connection options not found");
+            .Get<RedisConnectionOptions>();
 
         services.Configure<CachingOptions>(configuration.GetSection(CachingOptions.Section));
         services.AddStackExchangeRedisOutputCache(options =>
         {
-            options.Configuration = redisOptions.ConnectionString;
+            options.Configuration = redisOptions!.ConnectionString;
             options.InstanceName = "DataRetrievalCachingInstance";
         });
 

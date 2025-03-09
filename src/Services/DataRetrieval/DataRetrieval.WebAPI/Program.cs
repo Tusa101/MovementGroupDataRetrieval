@@ -1,15 +1,10 @@
-using System.Data;
 using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
-using Domain.Abstractions;
-using Domain.Entities;
-using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
 using Presentation.Mapper;
-using Shared.Options;
+using Serilog;
 
 namespace DataRetrieval.WebAPI;
 
@@ -24,19 +19,22 @@ public static class Program
     /// <param name="args">The command-line arguments.</param>
     public static void Main(string[] args)
     {
-        // CreateToken a new WebApplication builder
         var builder = WebApplication.CreateBuilder(args);
-
-        // AddAsync services to the container.
+        
         var presentationAssembly = typeof(Presentation.AssemblyReference).Assembly;
 
-        // AddAsync controllers from the presentation assembly
+        builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
+
         builder.Services.AddControllers()
             .AddApplicationPart(presentationAssembly);
-
-        // AddAsync Swagger/OpenAPI configuration
+        
         builder.Services.AddEndpointsApiExplorer();
+        
         builder.Services.AddSwaggerGenWithAuth();
+
+        builder.AddLogging();
 
         var applicationAssembly = typeof(Application.AssemblyReference).Assembly;
 
@@ -52,22 +50,22 @@ public static class Program
             c.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
         });
 
-        // AddAsync health checks
+        builder.Services.ConfigureCORS();
+        
         builder.Services.AddHealthChecks();
+
+        builder.Host.UseSerilog();
+
+        builder.Services.AddStoredDataFactory();
+
+        builder.Services.AddQuartzConfiguration();
 
         // AddAsync custom data caching using Cache
         builder.Services.AddCustomDataCaching(builder.Configuration);
         
+        builder.Services.AddDatabase(builder.Configuration);
+
         builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
-
-        builder.Services.AddScoped<IUnitOfWork>(factory => 
-            factory.GetRequiredService<ApplicationDbContext>());
-
-        builder.Services.AddDbContext<ApplicationDbContext>(o =>
-            o.UseNpgsql(builder.Configuration.GetRequiredSection("PostgresConnection:ConnectionString").Value!));
-
-        builder.Services.AddScoped<IDbConnection>(
-                factory => factory.GetRequiredService<ApplicationDbContext>().Database.GetDbConnection());
 
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
@@ -84,7 +82,7 @@ public static class Program
         app.MapHealthChecks("/Health");
 
         // Configure the HTTP request pipeline
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "LocalDocker")
         {
             // Enable Swagger UI in development environment
             app.UseSwagger();
@@ -104,34 +102,13 @@ public static class Program
             }
         }));
 
-        var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-        lifetime.ApplicationStarted.Register(async() =>
-        {
-            using var scope = app.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await db.Database.MigrateAsync();
-
-            await db.Database.BeginTransactionAsync(new CancellationToken());
-            try
-            {
-                await DbContextSeed.SeedUsers(db.Set<User>());
-                await DbContextSeed.SeedRoles(db.Set<Role>());
-                await DbContextSeed.SeedUserRoles(db.Set<UserRole>());
-
-                await db.SaveChangesAsync();
-                await db.Database.CommitTransactionAsync();
-            }
-            catch (Exception)
-            {
-                await db.Database.RollbackTransactionAsync();
-                throw;
-            }
-        });
+        app.PrepareDatabase();
 
         app.UseAuthentication();
 
         app.UseAuthorization();
 
+        app.UseCustomCORS();
 
         // Map controllers
         app.MapControllers();

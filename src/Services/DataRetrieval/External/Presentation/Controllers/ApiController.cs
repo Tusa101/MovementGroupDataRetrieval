@@ -21,12 +21,12 @@ public abstract class ApiController : ControllerBase
     protected IMapper Mapper => 
         _mapper ??= HttpContext.RequestServices.GetService<IMapper>()!;
 
-    private ISender _sender;
+    private IMediator _sender;
 
     /// <summary>
     /// Gets the MediatR sender instance. If not already initialized, it initializes it using the
     /// HttpContext's RequestServices.
     /// </summary>
-    protected ISender Sender =>
-        _sender ??= HttpContext.RequestServices.GetService<ISender>()!;
+    protected IMediator Mediator =>
+        _sender ??= HttpContext.RequestServices.GetService<IMediator>()!;
 }

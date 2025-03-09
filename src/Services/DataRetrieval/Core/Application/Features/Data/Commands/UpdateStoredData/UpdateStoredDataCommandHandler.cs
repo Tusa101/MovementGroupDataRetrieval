@@ -5,7 +5,7 @@ using Domain.Entities;
 using Domain.Exceptions;
 
 namespace Application.Features.Data.Commands.UpdateStoredData;
-public class UpdateStoredDataCommandHandler(StoredDataFactory storedDataFactory) : ICommandHandler<UpdateStoredDataCommand, UpdateStoredDataResponse>
+public class UpdateStoredDataCommandHandler(IStoredDataFactory storedDataFactory) : ICommandHandler<UpdateStoredDataCommand, UpdateStoredDataResponse>
 {
     public async Task<UpdateStoredDataResponse> Handle(UpdateStoredDataCommand request, CancellationToken cancellationToken)
     {

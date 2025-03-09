@@ -26,7 +26,7 @@ public static class SwaggerExtension
                 Title = "DataRetrieval API",
                 Version = "v1",
                 Description = "DataRetrieval API." +
-                ".NET Web API that provides a data retrieval service while using caching, file storage, and a database. " +
+                "`.NET Web API` that provides a data retrieval service while using caching, file storage, and a database. " +
                 "The service follows a layered architecture with design patterns and security mechanisms."
             });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -61,8 +61,7 @@ public static class SwaggerExtension
                         []
                     }
                 });
-
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlFile = "Presentation.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
         });

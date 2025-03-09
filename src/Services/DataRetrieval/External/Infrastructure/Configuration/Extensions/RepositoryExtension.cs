@@ -11,6 +11,7 @@ public static class RepositoryExtension
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IStoredDataRepository, StoredDataRepository>();
 
         return services;
     }

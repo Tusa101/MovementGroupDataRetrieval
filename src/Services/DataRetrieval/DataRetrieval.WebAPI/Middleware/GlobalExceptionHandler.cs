@@ -31,6 +31,11 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 (kvp, value) => new ApiError(kvp.Key, value))
                 .ToArray();
         }
+        
+        if (exception is BaseException)
+        {
+            statusCode = (int)HttpStatusCode.BadRequest;
+        }
 
         if (exception is DuplicateValueException || exception.GetType().IsSubclassOf(typeof(DuplicateValueException)))
         {
@@ -39,10 +44,6 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         if (exception is NotFoundException || exception.GetType().IsSubclassOf(typeof(NotFoundException)))
         {
             statusCode = (int)HttpStatusCode.NotFound;
-        }
-        if (exception is BaseException)
-        {
-            statusCode = (int)HttpStatusCode.BadRequest;
         }
 
         var problem = new ExtendedProblemDetails

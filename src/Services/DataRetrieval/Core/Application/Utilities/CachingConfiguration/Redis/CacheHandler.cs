@@ -19,7 +19,7 @@ public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger)
         try
         {
             var value = await cache.GetStringAsync(key)
-                ?? throw new NotFoundException($"{nameof(T)} cannot be found.");
+                ?? throw new NotFoundException($"{typeof(T).Name} cannot be found.");
 
             return System.Text.Json.JsonSerializer.Deserialize<T>(value!);
         }

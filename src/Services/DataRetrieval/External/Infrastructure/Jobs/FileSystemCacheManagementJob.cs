@@ -11,8 +11,8 @@ public class FileSystemCacheManagementJob(IFileSystemCachingProvider fileSystemC
 
         var entityTypes = domainAssembly.GetTypes().Where(t => t.BaseType == typeof(BaseEntity)).ToList();
 
-        
-
+#pragma warning disable CA1303
+        Console.WriteLine("Checking cache expiration...");
         foreach (var entitytype in entityTypes)
         {
             if (fileSystemCachingProvider.GetType()
@@ -33,6 +33,8 @@ public class FileSystemCacheManagementJob(IFileSystemCachingProvider fileSystemC
             }
         }
 
+        Console.WriteLine("FileSystemCache successfully cleared");
+#pragma warning restore CA1303
         return Task.CompletedTask;
     }
 }

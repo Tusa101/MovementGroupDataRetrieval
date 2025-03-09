@@ -2,11 +2,14 @@
 using System.Text.Json;
 using Domain.Exceptions;
 using Domain.Primitives;
+using Microsoft.Extensions.Options;
+using Shared.Options;
 
 namespace Application.Utilities.CachingConfiguration.FileSystem;
-public class FileSystemCachingProvider : IFileSystemCachingProvider
+public class FileSystemCachingProvider(IOptions<CachingOptions> options) : IFileSystemCachingProvider
 {
-    public const string FileSystemCachingFolder = "/data";
+    private readonly CachingOptions _options = options.Value;
+
     public async Task<bool> AddToFileSystemCacheAsync<T>(T obj, DateTime expirationTime, CancellationToken cancellation = default)
         where T : BaseEntity
     {
@@ -17,13 +20,16 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
         }
         catch (Exception)
         {
-            Directory.CreateDirectory(dirPath);
+            Directory.CreateDirectory(Path.Combine(_options.FileSystemCacheStoragePath, typeof(T).Name));
         }
 
         var pattern = "MM-dd-yyyy-HH-mm-ss-tt";
         var expiration = expirationTime.ToString(pattern, CultureInfo.CreateSpecificCulture("en-US"));
 
-        using var streamWriter = new StreamWriter(Path.Combine(dirPath, $"{obj.Id}_{expiration}.json"));
+        var filePath = Path.Combine(dirPath, $"{obj.Id}_{expiration}.json");
+
+        using var streamWriter = new StreamWriter(filePath);
+
         var serializedObj = JsonSerializer.Serialize(obj);
         await streamWriter.WriteAsync(serializedObj);
 
@@ -41,37 +47,40 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
 
         var deserializedObj = JsonSerializer.Deserialize<T>(
             await streamReader.ReadToEndAsync(cancellationToken))
-            ?? throw new NotFoundException(nameof(T), id);
+            ?? throw new NotFoundException(typeof(T).Name, id);
 
         return deserializedObj;
     }
 
-    private static string GetDirectoryPath<T>() where T : BaseEntity
-    {
-        var dirPath = $"{FileSystemCachingFolder}/{nameof(T)}";
-        if (!Directory.Exists(dirPath))
-        {
-            throw new DirectoryNotFoundException(dirPath);
-        }
 
-        return dirPath;
-    }
 
     public ICollection<string>? GetFilePathsByType<T>()
         where T : BaseEntity
     {
-        var dirPath = GetDirectoryPath<T>();
-
-        return Directory.EnumerateFiles(dirPath).ToList();
+        try
+        {
+            var dirPath = GetDirectoryPath<T>();
+            return Directory.EnumerateFiles(dirPath).ToList();
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     public bool FileExists<T>(Guid id)
         where T : BaseEntity
     {
-        var dirPath = GetDirectoryPath<T>();
-
-        var filePath = GetFilePath<T>(id, dirPath);
-        return File.Exists(filePath);
+        try
+        {
+            var dirPath = GetDirectoryPath<T>();
+            GetFilePath<T>(id, dirPath);
+            return true;
+        }
+        catch (Exception e) when (e is DirectoryNotFoundException || e is NotFoundException)
+        {
+            return false;
+        }
     }
 
     public bool DeleteFromFileSystemCache(string filePath)
@@ -82,6 +91,20 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
             return true;
         }
         return false;
+    }
+
+    public Task DeleteFromFileSystemCacheAsync<T>(Guid id, CancellationToken cancellation = default)
+    where T : BaseEntity
+    {
+        var dirPath = GetDirectoryPath<T>();
+
+        var filePath = GetFilePath<T>(id, dirPath);
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+
+        return Task.CompletedTask;
     }
 
     public DateTime? ExtractExpirationFromFilePath(string filePath)
@@ -102,32 +125,29 @@ public class FileSystemCachingProvider : IFileSystemCachingProvider
         return dateTime;
     }
 
-    private string GetFilePath<T>(Guid id, string dirPath) where T : BaseEntity
+    private string GetDirectoryPath<T>()
+        where T : BaseEntity
+    {
+        var dirPath = Path.Combine(_options.FileSystemCacheStoragePath, typeof(T).Name);
+        if (!Directory.Exists(dirPath))
+        {
+            throw new DirectoryNotFoundException(dirPath);
+        }
+
+        return dirPath;
+    }
+
+    private string GetFilePath<T>(Guid id, string dirPath)
+        where T : BaseEntity
     {
         DirectoryInfo directory = new(dirPath);
 
         var filePath = directory.EnumerateFiles()
             .Where(fi => fi.Name.Contains(id.ToString()))
             .Select(fi => fi.FullName)
-            .SingleOrDefault() ?? throw new NotFoundException(nameof(T), id);
-
-        var dateTime = ExtractExpirationFromFilePath(filePath) 
-            ?? throw new NotFoundException(nameof(T), id);
+            .SingleOrDefault() 
+            ?? throw new NotFoundException(typeof(T).Name, id);
 
         return filePath;
-    }
-
-    public Task DeleteFromFileSystemCacheAsync<T>(Guid id, CancellationToken cancellation = default) 
-        where T : BaseEntity
-    {
-        var dirPath = GetDirectoryPath<T>();
-
-        var filePath = GetFilePath<T>(id, dirPath);
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
-
-        return Task.CompletedTask;
     }
 }

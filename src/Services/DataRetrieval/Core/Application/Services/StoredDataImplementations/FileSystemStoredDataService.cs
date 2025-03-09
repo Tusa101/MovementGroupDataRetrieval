@@ -1,6 +1,4 @@
-﻿using Application.Features.Data.Queries.GetStoredData;
-using Application.Utilities.CachingConfiguration.FileSystem;
-using Application.Utilities.CachingConfiguration.Redis;
+﻿using Application.Utilities.CachingConfiguration.FileSystem;
 using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.Extensions.Options;
@@ -18,7 +16,9 @@ public class FileSystemStoredDataService(IFileSystemCachingProvider cacheHandler
         {
             throw new DuplicateValueException(nameof(StoredData), storedData.Id);
         }
-        await cacheHandler.AddToFileSystemCacheAsync(storedData, DateTime.UtcNow.AddMinutes(_options.FileSystemExpirationInMinutes));
+
+        await cacheHandler.AddToFileSystemCacheAsync<StoredData>(storedData,
+            DateTime.UtcNow.AddMinutes(_options.FileSystemExpirationInMinutes));
         
         return storedData.Id;
     }

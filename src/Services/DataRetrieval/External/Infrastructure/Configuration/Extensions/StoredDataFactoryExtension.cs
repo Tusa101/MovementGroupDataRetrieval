@@ -1,4 +1,6 @@
-﻿using Application.Services.StoredDataImplementations;
+﻿using Application.Services;
+using Application.Services.StoredDataImplementations;
+using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configuration.Extensions;
@@ -6,10 +8,11 @@ public static class StoredDataFactoryExtension
 {
     public static IServiceCollection AddStoredDataFactory(this IServiceCollection services)
     {
-        services.AddTransient<IStoredDataService, CacheStoredDataService>();
-        services.AddTransient<IStoredDataService, DatabaseStoredDataService>();
-        services.AddTransient<IStoredDataService, FileSystemStoredDataService>();
-        services.AddTransient<StoredDataFactory>();
+        services.AddScoped<IStoredDataService, CacheStoredDataService>();
+        services.AddScoped<IStoredDataService, DatabaseStoredDataService>();
+        services.AddScoped<IStoredDataService, FileSystemStoredDataService>();
+        services.Decorate<IStoredDataService, LoggingStoredDataServiceDecorator>();
+        services.AddScoped<IStoredDataFactory, StoredDataFactory>();
         return services;
     }
 }
