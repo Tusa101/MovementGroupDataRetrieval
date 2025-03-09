@@ -1,13 +1,13 @@
 ﻿using Application.Abstractions.MediatR;
+using Application.Utilities;
 using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using Domain.Exceptions;
-using Infrastructure.Utilities;
 using Shared.Constants;
 
 namespace Application.Features.Users.Commands.RegisterUser;
 public class RegisterUserCommandHandler(
-    IUserRepository userRepository, 
+    IUserRepository userRepository,
     IUserRoleRepository userRoleRepository,
     IRoleRepository roleRepository) :
     ICommandHandler<RegisterUserCommand, RegisterUserResponse>
@@ -20,20 +20,20 @@ public class RegisterUserCommandHandler(
         }
 
         var user = User.Create(
-            request.NickName, 
-            request.Email, 
-            request.FirstName, 
-            request.LastName, 
+            request.NickName,
+            request.Email,
+            request.FirstName,
+            request.LastName,
             PasswordHasher.Hash(request.Password));
 
-        await userRepository.Add(user);
+        await userRepository.AddAsync(user);
 
         var defaultRole = await roleRepository.GetByNameAsync(ApplicationRoles.User);
 
-        await userRoleRepository.Add(new UserRole
+        await userRoleRepository.AddAsync(new UserRole
         {
             UserId = user.Id,
-            RoleId = defaultRole.Id
+            RoleId = defaultRole!.Id
         });
 
         return new(user.Id);

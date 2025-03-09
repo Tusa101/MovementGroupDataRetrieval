@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Primitives;
 
 namespace Domain.Entities;
@@ -11,7 +10,7 @@ public class User : BaseEntity
 
     [MaxLength(100)]
     public string? FirstName { get; set; }
-    
+
     [MaxLength(100)]
     public string? LastName { get; set; }
 
@@ -25,7 +24,7 @@ public class User : BaseEntity
     public DateTimeOffset RegistrationDate { get; set; }
 
     #region Navigation
-    
+
     public virtual ICollection<UserRole> UserRoles { get; set; } = [];
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 
@@ -50,6 +49,6 @@ public class User : BaseEntity
             RegistrationDate = DateTimeOffset.UtcNow,
             Id = id ?? Guid.NewGuid()
         };
-    } 
+    }
     #endregion
 }

@@ -63,13 +63,17 @@ namespace Infrastructure.Configuration.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SomeFrontendPolicy")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
 
                     b.HasKey("Id")
                         .HasName("pk_roles");
+
+                    b.HasIndex("SomeFrontendPolicy")
+                        .IsUnique()
+                        .HasDatabaseName("ix_roles_name");
 
                     b.ToTable("roles", "identity");
                 });

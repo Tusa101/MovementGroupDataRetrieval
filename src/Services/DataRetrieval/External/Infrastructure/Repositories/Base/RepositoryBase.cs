@@ -18,7 +18,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>
     }
 
     #region RepositoryBase Methods Implementations
-    public virtual async Task Add(T entity)
+    public virtual async Task AddAsync(T entity)
     {
         var existingEntity = await _dbSet.FirstOrDefaultAsync(e => e.Id == entity.Id);
         if (existingEntity != null)
@@ -28,14 +28,14 @@ public class RepositoryBase<T> : IRepositoryBase<T>
         _dbSet.Add(entity);
     }
 
-    public async virtual Task Delete(Guid id)
+    public async virtual Task DeleteByIdAsync(Guid id)
     {
         var entity = await _dbSet.FindAsync(id)
             ?? throw new NotFoundException(typeof(T).FullName!, id);
-        await Delete(entity);
+        await DeleteAsync(entity);
     }
 
-    public virtual Task Delete(T entity)
+    public virtual Task DeleteAsync(T entity)
     {
         if (_dbContext.Entry(entity).State == EntityState.Detached)
         {
@@ -45,7 +45,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>
         return Task.CompletedTask;
     }
 
-    public async virtual Task<IReadOnlyCollection<T>> Get(
+    public async virtual Task<IReadOnlyCollection<T>> GetAsync(
         Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>,
         IOrderedQueryable<T>>? orderBy = null,
         bool trackChanges = false)
@@ -74,7 +74,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>
 
 
     /// <inheritdoc/>
-    public async virtual Task<IReadOnlyCollection<T>> GetAll()
+    public async virtual Task<IReadOnlyCollection<T>> GetAllAsync()
     {
         var result = await _dbSet.ToListAsync();
         return result.AsReadOnly();
@@ -82,12 +82,12 @@ public class RepositoryBase<T> : IRepositoryBase<T>
 
     /// <inheritdoc/>
 
-    public async virtual Task<T?> GetById(Guid id)
+    public async virtual Task<T?> GetByIdAsync(Guid id)
     {
         return await _dbSet.FindAsync(id);
     }
 
-    public virtual async Task Update(T entity)
+    public virtual async Task UpdateAsync(T entity)
     {
         _ = await _dbSet.AsNoTracking().FirstOrDefaultAsync(p => p.Id == entity.Id)
             ?? throw new NotFoundException(typeof(T).FullName!, entity.Id);

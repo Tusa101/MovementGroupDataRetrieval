@@ -66,7 +66,7 @@ namespace Infrastructure.Configuration.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SomeFrontendPolicy")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");

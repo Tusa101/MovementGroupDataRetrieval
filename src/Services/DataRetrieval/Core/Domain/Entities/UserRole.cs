@@ -13,7 +13,7 @@ public class UserRole : BaseEntity
     #region Navigation
 
     public virtual User User { get; set; } = null!;
-    public virtual Role Role { get; set; } = null!; 
+    public virtual Role Role { get; set; } = null!;
 
     #endregion
 }

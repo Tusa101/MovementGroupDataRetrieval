@@ -1,14 +1,14 @@
 ﻿using Application.Abstractions.MediatR;
+using Application.Utilities;
 using Domain.Abstractions.RepositoryInterfaces;
 using Domain.Entities;
 using Domain.Exceptions;
-using Infrastructure.Configuration.Options;
-using Infrastructure.Utilities;
 using Microsoft.Extensions.Options;
+using Shared.Options;
 
 namespace Application.Features.Users.Commands.LoginUser;
 public sealed class LoginUserCommandHandler(
-    IUserRepository userRepository, 
+    IUserRepository userRepository,
     IRefreshTokenRepository refreshTokenRepository,
     IOptions<JwtOptions> options,
     TokenProvider tokenProvider) :
@@ -37,7 +37,7 @@ public sealed class LoginUserCommandHandler(
             ExpiresOnUtc = DateTime.UtcNow.AddDays(_options.RefreshTokenExpirationInDays),
         };
 
-        await refreshTokenRepository.Add(refreshToken);
+        await refreshTokenRepository.AddAsync(refreshToken);
 
         return new(token, refreshToken.Token);
     }

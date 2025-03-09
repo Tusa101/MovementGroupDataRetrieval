@@ -1,5 +1,5 @@
-﻿using Domain.Primitives;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Domain.Primitives;
 
 namespace Domain.Abstractions;
 
@@ -14,7 +14,7 @@ public interface IRepositoryBase<T> where T : BaseEntity
     /// </summary>
     /// <returns>A task that represents the asynchronous operation.
     /// The task result contains a read-only collection of entities.</returns>
-    Task<IReadOnlyCollection<T>> GetAll();
+    Task<IReadOnlyCollection<T>> GetAllAsync();
 
     Task<bool> ExistsAsync(Expression<Func<T, bool>> filter);
 
@@ -26,7 +26,7 @@ public interface IRepositoryBase<T> where T : BaseEntity
     /// <param name="trackChanges">Whether to track changes on the entities.</param>
     /// <returns>A task that represents the asynchronous operation.
     /// The task result contains a read-only collection of entities.</returns>
-    Task<IReadOnlyCollection<T>> Get(
+    Task<IReadOnlyCollection<T>> GetAsync(
         Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>,
         IOrderedQueryable<T>>? orderBy = null,
         bool trackChanges = false);
@@ -37,28 +37,28 @@ public interface IRepositoryBase<T> where T : BaseEntity
     /// <param name="id">The ID of the entity.</param>
     /// <returns>A task that represents the asynchronous operation.
     /// The task result contains the entity, or null if not found.</returns>
-    Task<T?> GetById(Guid id);
+    Task<T?> GetByIdAsync(Guid id);
 
     /// <summary>
     /// Adds an entity to the repository.
     /// </summary>
     /// <param name="entity">The entity to add.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task Add(T entity);
+    Task AddAsync(T entity);
 
     /// <summary>
     /// Updates an entity in the repository.
     /// </summary>
     /// <param name="entity">The entity to update.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task Update(T entity);
+    Task UpdateAsync(T entity);
 
     /// <summary>
     /// Deletes an entity from the repository.
     /// </summary>
     /// <param name="entity">The entity to delete.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task Delete(T entity);
+    Task DeleteAsync(T entity);
 
-    Task Delete(Guid id);
+    Task DeleteByIdAsync(Guid id);
 }

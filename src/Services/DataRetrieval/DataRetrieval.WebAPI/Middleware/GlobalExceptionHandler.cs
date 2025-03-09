@@ -1,12 +1,9 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Domain.Exceptions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Application.Exceptions;
-using Infrastructure.Configuration.Extensions.Exceptions;
 using Domain.CommonConstants;
+using Domain.Exceptions;
+using Infrastructure.Configuration.Extensions.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 namespace DataRetrieval.WebAPI.Middleware;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
@@ -35,6 +32,11 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                 .ToArray();
         }
 
+        if (exception is BaseException)
+        {
+            statusCode = (int)HttpStatusCode.BadRequest;
+        }
+
         if (exception is DuplicateValueException || exception.GetType().IsSubclassOf(typeof(DuplicateValueException)))
         {
             statusCode = (int)HttpStatusCode.Conflict;
@@ -42,10 +44,6 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         if (exception is NotFoundException || exception.GetType().IsSubclassOf(typeof(NotFoundException)))
         {
             statusCode = (int)HttpStatusCode.NotFound;
-        }
-        if (exception is BaseException)
-        {
-            statusCode = (int)HttpStatusCode.BadRequest;
         }
 
         var problem = new ExtendedProblemDetails

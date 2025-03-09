@@ -1,7 +1,6 @@
 ﻿using Application.Features.Users.Commands.LoginByRefresh;
 using Application.Features.Users.Commands.LoginUser;
 using Application.Features.Users.Commands.RegisterUser;
-using Application.Features.Users.Commands.RevokeTokens;
 using AutoMapper;
 
 namespace Presentation.Mapper;

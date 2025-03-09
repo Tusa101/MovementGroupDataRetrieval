@@ -2,12 +2,12 @@
 using System.Security.Cryptography;
 using System.Text;
 using Domain.Entities;
-using Infrastructure.Configuration.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Options;
 
-namespace Infrastructure.Utilities;
+namespace Application.Utilities;
 public sealed class TokenProvider(IOptions<JwtOptions> options)
 {
     private readonly JwtOptions _jwtOptions = options.Value;
@@ -28,7 +28,7 @@ public sealed class TokenProvider(IOptions<JwtOptions> options)
         {
             claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
         }
-        
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = claimsIdentity,

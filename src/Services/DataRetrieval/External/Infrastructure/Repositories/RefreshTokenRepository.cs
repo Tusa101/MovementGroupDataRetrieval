@@ -12,7 +12,7 @@ public class RefreshTokenRepository(ApplicationDbContext dbContext) :
     public async Task<bool> DeleteAllByUserId(Guid userId)
     {
         await _dbSet.Where(rt => rt.UserId == userId).ExecuteDeleteAsync();
-        
+
         return true;
     }
 

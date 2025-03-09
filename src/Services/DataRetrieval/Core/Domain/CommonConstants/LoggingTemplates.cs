@@ -5,4 +5,5 @@ public static class LoggingTemplates
 {
     public static readonly CompositeFormat ErrorTemplate =
         CompositeFormat.Parse("An exception occured. Message:{0}. StackTrace:{1}.");
+    public const string CachingExceptionMessageTemplate = "{Exception}";
 }

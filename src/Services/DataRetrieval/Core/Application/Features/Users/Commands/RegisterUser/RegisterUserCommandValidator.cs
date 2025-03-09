@@ -12,10 +12,10 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .NotEmpty();
         RuleFor(x => x.Password)
             .Length(
-                ValidationConstants.MinPasswordLength, 
+                ValidationConstants.MinPasswordLength,
                 ValidationConstants.MaxPasswordLength)
-            .Must(x => 
-                x.Any(c => !char.IsLetterOrDigit(c)) && 
+            .Must(x =>
+                x.Any(c => !char.IsLetterOrDigit(c)) &&
                 x.Any(c => char.IsUpper(c)) &&
                 x.Any(c => char.IsLower(c)) &&
                 x.Any(c => char.IsLetterOrDigit(c)) &&

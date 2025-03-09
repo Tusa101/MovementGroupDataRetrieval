@@ -14,8 +14,9 @@ namespace Application.Behaviors;
 /// Initializes a new instance of the <see cref="UnitOfWorkBehavior{TRequest, TResponse}"/> class.
 /// </remarks>
 /// <param name="unitOfWork">The unit of work to be used by the behavior.</param>
-public class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork) : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+public class UnitOfWorkBehavior<TRequest, TResponse>(
+    IUnitOfWork unitOfWork)
+    : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
 
     /// <summary>

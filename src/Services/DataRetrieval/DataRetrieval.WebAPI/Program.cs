@@ -1,23 +1,10 @@
-
-using System;
-using System.Data;
-using System.Text;
 using Application.Behaviors;
 using DataRetrieval.WebAPI.Middleware;
-using Domain.Abstractions;
-using Domain.Abstractions.RepositoryInterfaces;
-using Domain.Entities;
-using Infrastructure.Configuration.DataAccess;
 using Infrastructure.Configuration.Extensions;
-using Infrastructure.Configuration.Options;
-using Infrastructure.Repositories;
-using Infrastructure.Utilities;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Presentation.Mapper;
+using Serilog;
 
 namespace DataRetrieval.WebAPI;
 
@@ -32,23 +19,26 @@ public static class Program
     /// <param name="args">The command-line arguments.</param>
     public static void Main(string[] args)
     {
-        // CreateToken a new WebApplication builder
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         var presentationAssembly = typeof(Presentation.AssemblyReference).Assembly;
 
-        // Add controllers from the presentation assembly
+        builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
+
         builder.Services.AddControllers()
             .AddApplicationPart(presentationAssembly);
 
-        // Add Swagger/OpenAPI configuration
         builder.Services.AddEndpointsApiExplorer();
+
         builder.Services.AddSwaggerGenWithAuth();
+
+        builder.AddLogging();
 
         var applicationAssembly = typeof(Application.AssemblyReference).Assembly;
 
-        builder.Services.AddAutoMapper(m => 
+        builder.Services.AddAutoMapper(m =>
         {
             m.AddProfile<AccountMappingProfile>();
             m.AddProfile<DataMappingProfile>();
@@ -60,29 +50,22 @@ public static class Program
             c.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
         });
 
-        // Add health checks
+        builder.Services.ConfigureCORS();
+
         builder.Services.AddHealthChecks();
 
-        // Get Redis connection options from configuration
-        var redisOptions = builder.Configuration
-            .GetSection(RedisConnectionOptions.Section)
-            .Get<RedisConnectionOptions>()
-            ?? throw new NullReferenceException(
-                $"{nameof(RedisConnectionOptions)} object is null. Redis connection options not found");
+        builder.Host.UseSerilog();
 
-        // Add custom data caching using Redis
-        builder.Services.AddCustomDataCaching(redisOptions);
-        
+        builder.Services.AddStoredDataFactory();
+
+        builder.Services.AddQuartzConfiguration();
+
+        // AddAsync custom data caching using Cache
+        builder.Services.AddCustomDataCaching(builder.Configuration);
+
+        builder.Services.AddDatabase(builder.Configuration);
+
         builder.Services.AddSingleton<IExceptionHandler, GlobalExceptionHandler>();
-
-        builder.Services.AddScoped<IUnitOfWork>(factory => 
-            factory.GetRequiredService<ApplicationDbContext>());
-
-        builder.Services.AddDbContext<ApplicationDbContext>(o =>
-            o.UseNpgsql(builder.Configuration.GetRequiredSection("PostgresConnection:ConnectionString").Value!));
-
-        builder.Services.AddScoped<IDbConnection>(
-                factory => factory.GetRequiredService<ApplicationDbContext>().Database.GetDbConnection());
 
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
@@ -99,7 +82,7 @@ public static class Program
         app.MapHealthChecks("/Health");
 
         // Configure the HTTP request pipeline
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "LocalDocker")
         {
             // Enable Swagger UI in development environment
             app.UseSwagger();
@@ -119,34 +102,13 @@ public static class Program
             }
         }));
 
-        var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-        lifetime.ApplicationStarted.Register(async() =>
-        {
-            using var scope = app.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await db.Database.MigrateAsync();
-
-            await db.Database.BeginTransactionAsync(new CancellationToken());
-            try
-            {
-                await DbContextSeed.SeedUsers(db.Set<User>());
-                await DbContextSeed.SeedRoles(db.Set<Role>());
-                await DbContextSeed.SeedUserRoles(db.Set<UserRole>());
-
-                await db.SaveChangesAsync();
-                await db.Database.CommitTransactionAsync();
-            }
-            catch (Exception)
-            {
-                await db.Database.RollbackTransactionAsync();
-                throw;
-            }
-        });
+        app.PrepareDatabase();
 
         app.UseAuthentication();
 
         app.UseAuthorization();
 
+        app.UseCustomCORS();
 
         // Map controllers
         app.MapControllers();

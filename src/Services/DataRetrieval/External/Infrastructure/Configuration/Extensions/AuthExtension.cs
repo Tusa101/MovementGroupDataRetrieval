@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Configuration.Options;
-using Infrastructure.Utilities;
+﻿using System.Text;
+using Application.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Options;
 
 namespace Infrastructure.Configuration.Extensions;
 public static class AuthExtension
@@ -16,7 +12,7 @@ public static class AuthExtension
     public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtOptions = configuration.GetRequiredSection(JwtOptions.Section).Get<JwtOptions>();
-        
+
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.Section));
 
         services.AddSingleton<TokenProvider>();

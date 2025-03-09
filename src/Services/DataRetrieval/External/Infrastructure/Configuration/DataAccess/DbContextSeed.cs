@@ -1,9 +1,7 @@
-﻿using Domain.Entities;
-using Infrastructure.Utilities;
-using Microsoft.AspNetCore.SignalR;
+﻿using Application.Utilities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Constants;
-using System;
 
 namespace Infrastructure.Configuration.DataAccess;
 public static class DbContextSeed
@@ -107,7 +105,7 @@ public static class DbContextSeed
                 RoleId = new Guid("1ae51b43-6160-4322-80d6-378fcb1ea5a9"),
             },
         ];
-    } 
+    }
 
     #endregion
 }
