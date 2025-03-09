@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "02cccfc6-2970-478f-9a1c-191022f5777a",
+		"name": "MovementGroupDataRetrievalCollection",
+		"description": "This is a collection for the test assignment to Movement Group. Provided by Alexander Tuskaev.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33042771"
+	},
+	"item": [
+		{
+			"name": "RegisterUser",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"test-user@gmail.com\",\r\n  \"password\": \"NeW_pwd!123!\",\r\n  \"nickName\": \"tester101\",\r\n  \"firstName\": \"Testy\",\r\n  \"lastName\": \"Tester\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_application_url}}/api/Account/register-user",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Account",
+						"register-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Extract accessToken and refreshToken from the response and set them as environment variables\r",
+							"pm.test(\"Extract and set accessToken and refreshToken as environment variables\", function () {\r",
+							"    const {accessToken, refreshToken} = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"accessToken\", accessToken);\r",
+							"    pm.collectionVariables.set(\"refreshToken\", refreshToken);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@localhost.com\",\r\n  \"password\": \"Admin_pwd123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_application_url}}/api/Account/login-user",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Account",
+						"login-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RefreshToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Extract accessToken and refreshToken from the response and set them as environment variables\r",
+							"pm.test(\"Extract and set accessToken and refreshToken as environment variables\", function () {\r",
+							"    const {accessToken, refreshToken} = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"accessToken\", accessToken);\r",
+							"    pm.collectionVariables.set(\"refreshToken\", refreshToken);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"refreshToken\": \"{{refreshToken}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_application_url}}/api/Account/refresh-token",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Account",
+						"refresh-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RevokeTokens",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_application_url}}/api/Account/revoke-tokens",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Account",
+						"revoke-tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetDataById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_application_url}}/api/Data/:{id}",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Data",
+						":{id}"
+					],
+					"variable": [
+						{
+							"key": "{id}",
+							"value": "ceb76f5b-6aef-4290-975f-0584363e1bb2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateData",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"updatedData\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_application_url}}/api/Data/:{id}",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Data",
+						":{id}"
+					],
+					"variable": [
+						{
+							"key": "{id}",
+							"value": "ceb76f5b-6aef-4290-975f-0584363e1bb2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddData",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"dataEgLoremIpsum\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_application_url}}/api/Data",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Data"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_application_url",
+			"value": "localhost:5100",
+			"type": "default"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
