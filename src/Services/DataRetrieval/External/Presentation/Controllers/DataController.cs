@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application.Features.Data.Commands.AddStoredData;
 using Application.Features.Data.Commands.UpdateStoredData;
+using Application.Features.Data.Queries.GetAllStoredData;
 using Application.Features.Data.Queries.GetStoredData;
 using Infrastructure.Configuration.Extensions.Exceptions;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,20 @@ public class DataController : ApiController
     public async Task<IActionResult> Get(Guid id)
     {
         return Ok(await Mediator.Send(new GetStoredDataQuery(id)));
+    }
+
+    /// <summary>
+    /// Retrieves a collection of stored data.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the retrieved data collection.</returns>
+    [HttpGet(HttpEndpoints.StoredData.GetAll)]
+    [Authorize]
+    [ProducesResponseType(typeof(GetAllStoredDataResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ExtendedProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ExtendedProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetAll()
+    {
+        return Ok(await Mediator.Send(new GetAllStoredDataQuery()));
     }
 
     /// <summary>

@@ -19,6 +19,12 @@ public interface IStoredDataService
     Task<StoredData> GetStoredDataAsync(Guid id);
 
     /// <summary>
+    /// Retrieves all stored data.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the retrieved data.</returns>
+    Task<ICollection<StoredData>> GetAllStoredDataAsync();
+
+    /// <summary>
     /// Adds a new stored data item.
     /// </summary>
     /// <param name="storedData">The data item to add.</param>

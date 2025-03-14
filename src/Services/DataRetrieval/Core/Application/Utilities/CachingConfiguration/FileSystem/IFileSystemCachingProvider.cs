@@ -7,6 +7,8 @@ public interface IFileSystemCachingProvider
         where T : BaseEntity;
     Task<T?> GetFromFileSystemCacheAsync<T>(Guid id, CancellationToken cancellationToken = default)
         where T : BaseEntity;
+    Task<ICollection<T>?> GetAllFromFileSystemCacheAsync<T>(CancellationToken cancellationToken = default)
+        where T : BaseEntity;
     bool FileExists<T>(Guid id)
         where T : BaseEntity;
     ICollection<string>? GetFilePathsByType<T>()

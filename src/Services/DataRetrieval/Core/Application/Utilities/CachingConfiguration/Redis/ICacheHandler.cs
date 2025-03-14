@@ -14,14 +14,6 @@ public interface ICacheHandler
     Task<T?> GetAsync<T>(string key);
 
     /// <summary>
-    /// Retrieves a range of values from the cache by key.
-    /// </summary>
-    /// <typeparam name="T">The type of the values to retrieve.</typeparam>
-    /// <param name="key">The key of the values to retrieve.</param>
-    /// <returns>The values if found, otherwise an empty enumerable.</returns>
-    Task<IEnumerable<T>> GetRangeAsync<T>(string key);
-
-    /// <summary>
     /// Sets a value in the cache with the specified key and expiration.
     /// </summary>
     /// <param name="key">The key of the value to set.</param>

@@ -74,11 +74,8 @@ public class RepositoryBase<T> : IRepositoryBase<T>
 
 
     /// <inheritdoc/>
-    public async virtual Task<IReadOnlyCollection<T>> GetAllAsync()
-    {
-        var result = await _dbSet.ToListAsync();
-        return result.AsReadOnly();
-    }
+    public async virtual Task<ICollection<T>> GetAllAsync()
+        => await _dbSet.ToListAsync();
 
     /// <inheritdoc/>
 

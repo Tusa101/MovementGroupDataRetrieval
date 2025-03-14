@@ -22,6 +22,11 @@ public class CacheStoredDataService(ICacheHandler cacheHandler, IOptions<Caching
         return storedData.Id;
     }
 
+    public Task<ICollection<StoredData>> GetAllStoredDataAsync()
+    {
+        throw new NotSupportedException();
+    }
+
     public async Task<StoredData> GetStoredDataAsync(Guid id)
     {
         var storedData = await cacheHandler.GetAsync<StoredData>($"{nameof(StoredData)}_{id}");

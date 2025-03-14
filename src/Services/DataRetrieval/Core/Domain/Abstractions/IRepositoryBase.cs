@@ -13,8 +13,8 @@ public interface IRepositoryBase<T> where T : BaseEntity
     /// Gets all entities from the repository.
     /// </summary>
     /// <returns>A task that represents the asynchronous operation.
-    /// The task result contains a read-only collection of entities.</returns>
-    Task<IReadOnlyCollection<T>> GetAllAsync();
+    /// The task result contains a collection of entities.</returns>
+    Task<ICollection<T>> GetAllAsync();
 
     Task<bool> ExistsAsync(Expression<Func<T, bool>> filter);
 
