@@ -12,6 +12,11 @@ public class DatabaseStoredDataService(IStoredDataRepository storedDataRepositor
         return storedData.Id;
     }
 
+    public async Task<ICollection<StoredData>> GetAllStoredDataAsync()
+    {
+        return await storedDataRepository.GetAllAsync();
+    }
+
     public async Task<StoredData> GetStoredDataAsync(Guid id)
         => await storedDataRepository.GetByIdAsync(id);
 

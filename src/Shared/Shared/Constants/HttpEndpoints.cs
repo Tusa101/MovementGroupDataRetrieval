@@ -9,4 +9,8 @@ public static class HttpEndpoints
         public const string RefreshToken = "refresh-token";
         public const string RevokeTokens = "revoke-tokens";
     }
+    public static class StoredData
+    {
+        public const string GetAll = "get-all";
+    }
 }

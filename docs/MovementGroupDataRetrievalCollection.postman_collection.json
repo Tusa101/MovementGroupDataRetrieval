@@ -17,7 +17,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"test-user@gmail.com\",\r\n  \"password\": \"NeW_pwd!123!\",\r\n  \"nickName\": \"tester101\",\r\n  \"firstName\": \"Testy\",\r\n  \"lastName\": \"Tester\"\r\n}",
+					"raw": "{\r\n  \"email\": \"test-user1@gmail.com\",\r\n  \"password\": \"NeW_pwd!123!\",\r\n  \"nickName\": \"tester101\",\r\n  \"firstName\": \"Testy\",\r\n  \"lastName\": \"Tester\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -274,6 +274,35 @@
 					"path": [
 						"api",
 						"Data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllData",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_application_url}}/api/Data/get-all",
+					"host": [
+						"{{base_application_url}}"
+					],
+					"path": [
+						"api",
+						"Data",
+						"get-all"
 					]
 				}
 			},

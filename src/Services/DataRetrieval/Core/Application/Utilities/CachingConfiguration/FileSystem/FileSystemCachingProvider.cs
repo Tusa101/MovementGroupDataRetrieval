@@ -52,6 +52,33 @@ public class FileSystemCachingProvider(IOptions<CachingOptions> options) : IFile
         return deserializedObj;
     }
 
+    public async Task<ICollection<T>?> GetAllFromFileSystemCacheAsync<T>(CancellationToken cancellationToken = default)
+        where T : BaseEntity
+    {
+        var filePaths = GetFilePathsByType<T>()
+            ?? throw new NotFoundException(typeof(T).Name);
+
+        var collection = new List<T>();
+
+        foreach (var filePath in filePaths)
+        {
+            using var streamReader = new StreamReader(filePath);
+
+            var deserializedObj = JsonSerializer.Deserialize<T>(
+                await streamReader.ReadToEndAsync(cancellationToken));
+
+            if (deserializedObj is not null)
+            {
+                collection.Add(deserializedObj);
+            }
+        }
+        if (collection.Count == 0)
+        {
+            throw new NotFoundException(typeof(T).Name);
+        }
+        return collection;
+    }
+
 
 
     public ICollection<string>? GetFilePathsByType<T>()

@@ -23,6 +23,10 @@ public class FileSystemStoredDataService(IFileSystemCachingProvider cacheHandler
         return storedData.Id;
     }
 
+    public async Task<ICollection<StoredData>> GetAllStoredDataAsync()
+        => await cacheHandler.GetAllFromFileSystemCacheAsync<StoredData>();
+    
+
     public async Task<StoredData> GetStoredDataAsync(Guid id)
         => await cacheHandler.GetFromFileSystemCacheAsync<StoredData>(id);
 

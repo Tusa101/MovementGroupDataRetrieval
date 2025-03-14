@@ -35,33 +35,6 @@ public class CacheHandler(IDistributedCache cache, ILogger<CacheHandler> logger)
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<T>> GetRangeAsync<T>(string key)
-    {
-        try
-        {
-            var value = await cache.GetStringAsync(key);
-
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return [];
-            }
-
-            var json = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<T>>(value!);
-            if (json is null)
-            {
-                return [];
-            }
-
-            return json;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(LoggingTemplates.CachingExceptionMessageTemplate, ex.ToString());
-            return [];
-        }
-    }
-
-    /// <inheritdoc/>
     public async Task<bool> SetAsync(string key, object value, TimeSpan expiration)
     {
         try

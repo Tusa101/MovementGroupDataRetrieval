@@ -1,10 +1,11 @@
 ﻿using Application.Abstractions.MediatR;
 using Application.Services.StoredDataImplementations;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
 
 namespace Application.Features.Data.Queries.GetStoredData;
-public class GetStoredDataQueryHandler(IStoredDataFactory storedDataFactory) : IQueryHandler<GetStoredDataQuery, GetStoredDataResponse>
+public class GetStoredDataQueryHandler(IStoredDataFactory storedDataFactory, IMapper mapper) : IQueryHandler<GetStoredDataQuery, GetStoredDataResponse>
 {
     public async Task<GetStoredDataResponse> Handle(GetStoredDataQuery request, CancellationToken cancellationToken)
     {
@@ -20,7 +21,7 @@ public class GetStoredDataQueryHandler(IStoredDataFactory storedDataFactory) : I
                 storedData = await dataService.GetStoredDataAsync(request.Id);
                 if (!missingStorages.Any())
                 {
-                    return new(storedData);
+                    return mapper.Map<GetStoredDataResponse>(storedData);
                 }
             }
             catch (Exception e) when (e is NotFoundException || e is DirectoryNotFoundException)
@@ -37,7 +38,7 @@ public class GetStoredDataQueryHandler(IStoredDataFactory storedDataFactory) : I
                 dataService = storedDataFactory.GetStoredDataService(storage);
                 await dataService.AddStoredDataAsync(storedData);
             }
-            return new(storedData);
+            return mapper.Map<GetStoredDataResponse>(storedData);
         }
 
         throw new NotFoundException(nameof(StoredData), request.Id);
