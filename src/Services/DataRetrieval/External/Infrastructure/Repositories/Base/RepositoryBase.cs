@@ -18,6 +18,8 @@ public class RepositoryBase<T> : IRepositoryBase<T>
     }
 
     #region RepositoryBase Methods Implementations
+    
+    ///<inheritdoc/>
     public virtual async Task AddAsync(T entity)
     {
         var existingEntity = await _dbSet.FirstOrDefaultAsync(e => e.Id == entity.Id);
@@ -28,6 +30,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>
         _dbSet.Add(entity);
     }
 
+    ///<inheritdoc/>
     public async virtual Task DeleteByIdAsync(Guid id)
     {
         var entity = await _dbSet.FindAsync(id)
@@ -35,6 +38,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>
         await DeleteAsync(entity);
     }
 
+    ///<inheritdoc/>
     public virtual Task DeleteAsync(T entity)
     {
         if (_dbContext.Entry(entity).State == EntityState.Detached)
@@ -45,6 +49,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>
         return Task.CompletedTask;
     }
 
+    ///<inheritdoc/>
     public async virtual Task<IReadOnlyCollection<T>> GetAsync(
         Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>,
         IOrderedQueryable<T>>? orderBy = null,
@@ -78,12 +83,12 @@ public class RepositoryBase<T> : IRepositoryBase<T>
         => await _dbSet.ToListAsync();
 
     /// <inheritdoc/>
-
     public async virtual Task<T?> GetByIdAsync(Guid id)
     {
         return await _dbSet.FindAsync(id);
     }
 
+    ///<inheritdoc/>
     public virtual async Task UpdateAsync(T entity)
     {
         _ = await _dbSet.AsNoTracking().FirstOrDefaultAsync(p => p.Id == entity.Id)
@@ -92,10 +97,15 @@ public class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext.Entry(entity).State = EntityState.Modified;
     }
 
+    ///<inheritdoc/>
     public async Task<bool> ExistsAsync(Expression<Func<T, bool>> filter)
     {
         var result = await _dbSet.AnyAsync(filter);
         return result;
     }
+
+    ///<inheritdoc/>
+    public async Task<int> CountAsync() 
+        => await _dbSet.CountAsync();
     #endregion
 }

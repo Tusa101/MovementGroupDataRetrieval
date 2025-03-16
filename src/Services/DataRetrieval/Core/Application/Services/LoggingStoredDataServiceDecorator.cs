@@ -32,6 +32,22 @@ public class LoggingStoredDataServiceDecorator(
         }
     }
 
+    public async Task<int> CountAsync()
+    {
+        logger.LogInformation($"Counting stored data in the storage {SupportedStorage}");
+        try
+        {
+            var result = await storedDataService.CountAsync();
+            logger.LogInformation(SuccessLoggingTemplate, nameof(CountAsync), nameof(StoredData), SupportedStorage);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(FailedLoggingTemplate, nameof(CountAsync), nameof(StoredData), SupportedStorage, ex);
+            throw;
+        }
+    }
+
     public async Task<ICollection<StoredData>> GetAllStoredDataAsync()
     {
         logger.LogInformation($"Retrieving (GetAll) stored data from the storage {SupportedStorage}");

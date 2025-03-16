@@ -37,4 +37,10 @@ public interface IStoredDataService
     /// <param name="storedData">The updated data item.</param>
     /// <returns>A task that represents the asynchronous operation. The task result indicates whether the update was successful.</returns>
     Task<bool> UpdateStoredDataAsync(StoredData storedData);
+
+    /// <summary>
+    /// Get count of all elemets of the defined type
+    /// </summary>
+    /// <returns>Integer value</returns>
+    Task<int> CountAsync();
 }

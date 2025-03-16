@@ -12,6 +12,10 @@ public class DatabaseStoredDataService(IStoredDataRepository storedDataRepositor
         return storedData.Id;
     }
 
+    public async Task<int> CountAsync()
+        => await storedDataRepository.CountAsync();
+    
+
     public async Task<ICollection<StoredData>> GetAllStoredDataAsync()
     {
         return await storedDataRepository.GetAllAsync();

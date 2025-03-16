@@ -21,7 +21,9 @@ public class RefreshTokenRepository(ApplicationDbContext dbContext) :
         var query = _dbSet.AsNoTracking();
         if (includeUser)
         {
-            query = query.Include(r => r.User);
+            query = query.Include(r => r.User)
+                .ThenInclude(u => u.UserRoles)
+                .ThenInclude(u => u.Role);
         }
         return await query.FirstOrDefaultAsync(r => r.Token == token);
     }

@@ -23,6 +23,9 @@ public class FileSystemStoredDataService(IFileSystemCachingProvider cacheHandler
         return storedData.Id;
     }
 
+    public Task<int> CountAsync()
+        => Task.FromResult(cacheHandler.Count<StoredData>());
+
     public async Task<ICollection<StoredData>> GetAllStoredDataAsync()
         => await cacheHandler.GetAllFromFileSystemCacheAsync<StoredData>();
     
