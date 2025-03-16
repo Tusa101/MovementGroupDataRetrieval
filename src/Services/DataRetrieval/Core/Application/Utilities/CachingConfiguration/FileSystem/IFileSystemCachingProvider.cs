@@ -17,4 +17,6 @@ public interface IFileSystemCachingProvider
         where T : BaseEntity;
     bool DeleteFromFileSystemCache(string filePath);
     DateTime? ExtractExpirationFromFilePath(string filePath);
+    int Count<T>()
+        where T : BaseEntity;
 }

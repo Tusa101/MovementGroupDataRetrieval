@@ -12,6 +12,11 @@ public sealed class GetAllStoredDataQueryHandler(IStoredDataFactory storedDataFa
     {
         IStoredDataService dataService;
         ICollection<StoredData> storedDatas = null;
+        
+        var dbDataCount = await storedDataFactory
+            .GetStoredDataService(SupportedStorage.Database)
+            .CountAsync();
+
         var missingStorages = new List<SupportedStorage>();
 
         foreach (var storage in Enum.GetValues<SupportedStorage>()
@@ -21,7 +26,8 @@ public sealed class GetAllStoredDataQueryHandler(IStoredDataFactory storedDataFa
             {
                 dataService = storedDataFactory.GetStoredDataService(storage);
                 storedDatas = await dataService.GetAllStoredDataAsync();
-                if (!missingStorages.Any())
+
+                if (!missingStorages.Any() && storedDatas.Count == dbDataCount)
                 {
                     return new(mapper.Map<ICollection<GetStoredDataResponse>>(storedDatas));
                 }

@@ -61,4 +61,10 @@ public interface IRepositoryBase<T> where T : BaseEntity
     Task DeleteAsync(T entity);
 
     Task DeleteByIdAsync(Guid id);
+
+    /// <summary>
+    /// Represents the number of entities in the repository.
+    /// </summary>
+    /// <returns>Count of entities.</returns>
+    Task<int> CountAsync();
 }

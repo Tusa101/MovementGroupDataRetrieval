@@ -22,6 +22,11 @@ public class CacheStoredDataService(ICacheHandler cacheHandler, IOptions<Caching
         return storedData.Id;
     }
 
+    public Task<int> CountAsync()
+    {
+        throw new NotSupportedException();
+    }
+
     public Task<ICollection<StoredData>> GetAllStoredDataAsync()
     {
         throw new NotSupportedException();

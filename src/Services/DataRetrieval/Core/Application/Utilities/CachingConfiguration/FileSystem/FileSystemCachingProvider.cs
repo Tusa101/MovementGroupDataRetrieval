@@ -177,4 +177,12 @@ public class FileSystemCachingProvider(IOptions<CachingOptions> options) : IFile
 
         return filePath;
     }
+
+    public int Count<T>()
+        where T : BaseEntity
+    {
+        var filePaths = GetFilePathsByType<T>()
+            ?? throw new NotFoundException(typeof(T).Name);
+        return filePaths.Count;
+    }
 }
